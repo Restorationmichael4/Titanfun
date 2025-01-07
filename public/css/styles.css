@@ -1,79 +1,21 @@
-/* General Body Styling */
 body {
     font-family: Arial, sans-serif;
-    color: gold; /* Text color */
-    background-color: #5e3370; /* Deep Purple background */
-    margin: 0;
-    padding: 0;
-    display: flex; /* Added for overall page centering */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    min-height: 100vh; /* Ensure body covers the whole viewport */
+    color: gold;
+    background-color: black;
 }
 
-/* Container Styling */
-.container {
-    max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #8e44ad; /* Purple container background */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
-    color: #ffffff; /* White text inside the container */
+.feature-card {
+    display: block;
+    background: linear-gradient(to bottom, gold, red);
     text-align: center;
-}
-
-/* Form Styling */
-form {
-  display: flex;
-  flex-direction: column; /* Keep the elements in a column */
-  gap: 10px; /* Space between form elements*/
-}
-
-form input[type="text"] {
-    padding: 12px;
-    font-size: 16px;
-    border: 2px solid gold;
-    border-radius: 5px;
-    outline: none;
-    background-color: #5e3370; /* Deep purple input field */
-    color: #ffffff;
-        box-sizing: border-box;
-    width: calc(100% - 24px); /* Adjust width to account for padding */
-
-}
-
-form input[type="text"]:focus{
-    border-color: #ffffff; /* Highlight on focus */
-    box-shadow: 0 0 8px rgba(255, 255, 255,0.3); /* Add glow effect when focused */
-}
-
-form button {
-    padding: 12px 20px;
-    font-size: 18px;
+    padding: 1rem;
+    color: white;
     font-weight: bold;
-    color: #ffffff;
-    background-color: #e74c3c; /* Bright red button */
-    border: none;
-    border-radius: 8px; /* Increased border-radius */
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s ease; /* Added transition for scaling */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Added button shadow for depth */
+    border-radius: 0.5rem;
+    transition: transform 0.3s;
 }
 
-form button:hover {
-    background-color: #c0392b; /* Darker red on hover */
-    transform: scale(1.05); /* Scale up on hover for a more prominent effect */
+.feature-card:hover {
+    transform: scale(1.1);
+    color: white;
 }
-
-/* Response Text Styling */
-#horoscopeResult {
-    margin-top: 20px;
-    padding: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #ff6f61; /* Light red text for responses */
-    background-color: #5e3370; /* Deep purple background for contrast */
-    border-radius: 5px;
-    text-align: center;
-    }
