@@ -1,7 +1,12 @@
 body {
     font-family: Arial, sans-serif;
     color: gold;
-    background-color: black;
+    background-image: url('public/images/wallpaper.jpg'); /* Path to your wallpaper */
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-position: center; /* Centers the image */
+    background-repeat: no-repeat; /* Prevents tiling */
+    margin: 0;
+    padding: 0;
 }
 
 .feature-card {
