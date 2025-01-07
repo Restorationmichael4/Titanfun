@@ -19,6 +19,26 @@ body {
     text-align: center;
 }
 
+/* Button Styling */
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #3498db; /* Blue button for better contrast */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none; /* Remove underline from links */
+    transition: background-color 0.3s, transform 0.2s; /* Added transform for effect */
+}
+
+.button:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover for effect */
+}
+
 /* Form Styling */
 form {
     display: flex;
@@ -41,15 +61,14 @@ form button {
     font-size: 18px;
     font-weight: bold;
     color: #ffffff;
-    background-color: #e74c3c; /* Red button */
+    background-color: #3498db; /* Blue button for better contrast */
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
 form button:hover {
-    background-color: #c0392b; /* Darker red on hover */
+        background-color: #2980b9; /* Darker blue on hover */
 }
 
 /* Response Text Styling */
@@ -59,14 +78,10 @@ form button:hover {
     font-size: 18px;
     font-weight: bold;
     color: #2ecc71; /* Bright green text for responses */
-    background-color: #1c2833; /* Solid dark background for contrast */
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Subtle shadow for emphasis */
 }
 
 /* Footer Styling */
 footer {
     text-align: center;
     color: #bdc3c7; /* Light gray text for the footer */
-    margin-top: 30px;
 }
