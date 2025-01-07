@@ -1,1 +1,21 @@
+body {
+    font-family: Arial, sans-serif;
+    color: gold;
+    background-color: black;
+}
 
+.feature-card {
+    display: block;
+    background: linear-gradient(to bottom, gold, red);
+    text-align: center;
+    padding: 1rem;
+    color: black;
+    font-weight: bold;
+    border-radius: 0.5rem;
+    transition: transform 0.3s;
+}
+
+.feature-card:hover {
+    transform: scale(1.1);
+    color: white;
+}
