@@ -2,10 +2,14 @@ const express = require('express');
 const fs = require('fs');
 const axios = require('axios');
 const app = express();
+const sqlite3 = require('sqlite3').verbose();
+const bodyParser = require('body-parser');
 const port = 3000;
 
 app.use(express.json());
 app.use(express.static('public'));
+app.use(bodyParser.json());
+
 
 // Load horoscope data
 const horoscopes = JSON.parse(fs.readFileSync('./server/data/horoscopes.json', 'utf8'));
