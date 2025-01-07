@@ -1,1 +1,28 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictionary</title>
+    <link href="css/styles.css" rel="stylesheet">
+</head>
+<body class="bg-black text-gold">
+    <header class="p-4 text-center">
+        <h1 class="text-3xl font-bold text-gradient">Dictionary</h1>
+    </header>
+    <main class="flex flex-col items-center p-6 space-y-6">
+        <form id="dictionary-form" class="flex flex-col items-center space-y-4">
+            <input type="text" id="word-input" placeholder="Enter a word" 
+                   class="p-2 text-black rounded-md" required>
+            <button type="submit" class="bg-gradient-to-r from-gold to-red px-4 py-2 rounded-md">
+                Search
+            </button>
+        </form>
+        <div id="dictionary-result" class="mt-6 text-center"></div>
+    </main>
+    <footer class="text-center text-sm text-gray-400 py-4">
+        © 2025 Titan Fun
+    </footer>
+    <script src="js/dictionary.js"></script>
+</body>
+</html>
