@@ -1,8 +1,8 @@
 /* General Body Styling */
 body {
     font-family: Arial, sans-serif;
-    color: #333; /* Dark gray text for better readability */
-    background-color: #f0f0f0; /* Light gray background */
+    color: gold; /* Text color */
+    background-color: #5e3370; /* Deep Purple background */
     margin: 0;
     padding: 0;
     display: flex; /* Added for overall page centering */
@@ -14,44 +14,46 @@ body {
 /* Container Styling */
 .container {
     max-width: 600px;
-    padding: 30px; /* Increased padding */
-    background-color: #fff; /* White container background */
-    border-radius: 15px; /* Increased border radius */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Increased shadow */
-    color: #333; /* Dark gray text inside the container */
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #8e44ad; /* Purple container background */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+    color: #ffffff; /* White text inside the container */
     text-align: center;
 }
 
 /* Form Styling */
 form {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Keep the elements in a column */
   gap: 10px; /* Space between form elements*/
 }
 
 form input[type="text"] {
     padding: 12px;
     font-size: 16px;
-    border: 2px solid #ccc; /* Light gray border */
-    border-radius: 8px; /* Rounded corners */
+    border: 2px solid gold;
+    border-radius: 5px;
     outline: none;
-    background-color: #f9f9f9; /* Light input field */
-    color: #333;
+    background-color: #5e3370; /* Deep purple input field */
+    color: #ffffff;
+        box-sizing: border-box;
     width: calc(100% - 24px); /* Adjust width to account for padding */
-    box-sizing: border-box; /* Include padding in width calculation */
+
 }
 
 form input[type="text"]:focus{
-    border-color: #007bff; /* Highlight on focus */
-    box-shadow: 0 0 8px rgba(0,123,255,0.3); /* Add glow effect when focused */
+    border-color: #ffffff; /* Highlight on focus */
+    box-shadow: 0 0 8px rgba(255, 255, 255,0.3); /* Add glow effect when focused */
 }
 
 form button {
-    padding: 14px 20px;
+    padding: 12px 20px;
     font-size: 18px;
     font-weight: bold;
-    color: #fff;
-    background-color: #28a745; /* Bright green button */
+    color: #ffffff;
+    background-color: #e74c3c; /* Bright red button */
     border: none;
     border-radius: 8px; /* Increased border-radius */
     cursor: pointer;
@@ -60,18 +62,18 @@ form button {
 }
 
 form button:hover {
-    background-color: #218838; /* Darker green on hover */
+    background-color: #c0392b; /* Darker red on hover */
     transform: scale(1.05); /* Scale up on hover for a more prominent effect */
 }
 
 /* Response Text Styling */
 #horoscopeResult {
     margin-top: 20px;
-    padding: 15px;
-    font-size: 20px; /* Slightly larger text */
+    padding: 10px;
+    font-size: 18px;
     font-weight: bold;
-    color: #28a745; /* Green text */
-    background-color: #f0f0f0; /* Light gray background for better contrast */
-    border-radius: 10px; /* Increased border radius */
-    text-align: center; /* Center-aligned response */
-}
+    color: #ff6f61; /* Light red text for responses */
+    background-color: #5e3370; /* Deep purple background for contrast */
+    border-radius: 5px;
+    text-align: center;
+    }
