@@ -1,1 +1,438 @@
+[
+    {
+        "sign": "Aries",
+        "start": { "month": 3, "day": 21 },
+        "end": { "month": 4, "day": 19 },
+        "prediction": "Today is a great day to take bold steps in your life."
+    },
+    {
+        "sign": "Taurus",
+        "start": { "month": 4, "day": 20 },
+        "end": { "month": 5, "day": 20 },
+        "prediction": "Patience will bring you rewards today."
+    },
+    {
+        "sign": "Gemini",
+        "start": { "month": 5, "day": 21 },
+        "end": { "month": 6, "day": 20 },
+        "prediction": "Embrace your curiosity and explore new ideas."
+    },
+    {
+        "sign": "Cancer",
+        "start": { "month": 6, "day": 21 },
+        "end": { "month": 7, "day": 22 },
+        "prediction": "Your emotional strength will guide you through challenges."
+    },
+    {
+        "sign": "Leo",
+        "start": { "month": 7, "day": 23 },
+        "end": { "month": 8, "day": 22 },
+        "prediction": "Show your leadership qualities and shine today."
+    },
+    {
+        "sign": "Virgo",
+        "start": { "month": 8, "day": 23 },
+        "end": { "month": 9, "day": 22 },
+        "prediction": "Attention to detail will help you achieve your goals."
+    },
+    {
+        "sign": "Libra",
+        "start": { "month": 9, "day": 23 },
+        "end": { "month": 10, "day": 22 },
+        "prediction": "Seek balance and harmony in your relationships."
+    },
+    {
+        "sign": "Scorpio",
+        "start": { "month": 10, "day": 23 },
+        "end": { "month": 11, "day": 21 },
+        "prediction": "Trust your instincts to navigate through uncertainty."
+    },
+    {
+        "sign": "Sagittarius",
+        "start": { "month": 11, "day": 22 },
+        "end": { "month": 12, "day": 21 },
+        "prediction": "Adventure awaits; embrace the excitement of the unknown."
+    },
+    {
+        "sign": "Capricorn",
+        "start": { "month": 12, "day": 22 },
+        "end": { "month": 1, "day": 19 },
+        "prediction": "Hard work and determination will lead to success."
+    },
+    {
+        "sign": "Aquarius",
+        "start": { "month": 1, "day": 20 },
+        "end": { "month": 2, "day": 18 },
+        "prediction": "Your innovative ideas will inspire those around you."
+    },
+    {
+        "sign": "Pisces",
+        "start": { "month": 2, "day": 19 },
+        "end": { "month": 3, "day": 20 },
+        "prediction": "Let your creativity flow and trust your intuition."
+    },
+    {
+        "sign": "Aries",
+        "start": { "month": 3, "day": 21 },
+        "end": { "month": 4, "day": 19 },
+        "prediction": "You are full of energy; channel it toward your goals."
+    },
+    {
+        "sign": "Taurus",
+        "start": { "month": 4, "day": 20 },
+        "end": { "month": 5, "day": 20 },
+        "prediction": "Remain grounded and focus on what matters most."
+    },
+    {
+        "sign": "Gemini",
+        "start": { "month": 5, "day": 21 },
+        "end": { "month": 6, "day": 20 },
+        "prediction": "Stay flexible and embrace life's changes."
+    },
+    {
+        "sign": "Cancer",
+        "start": { "month": 6, "day": 21 },
+        "end": { "month": 7, "day": 22 },
+        "prediction": "Your caring nature will strengthen your relationships."
+    },
+    {
+        "sign": "Leo",
+        "start": { "month": 7, "day": 23 },
+        "end": { "month": 8, "day": 22 },
+        "prediction": "Confidence will lead you to great opportunities today."
+    },
+    {
+        "sign": "Virgo",
+        "start": { "month": 8, "day": 23 },
+        "end": { "month": 9, "day": 22 },
+        "prediction": "Keep your focus sharp to tackle important tasks."
+    },
+    {
+        "sign": "Libra",
+        "start": { "month": 9, "day": 23 },
+        "end": { "month": 10, "day": 22 },
+        "prediction": "Harmony is key to overcoming challenges today."
+    },
+    {
+        "sign": "Scorpio",
+        "start": { "month": 10, "day": 23 },
+        "end": { "month": 11, "day": 21 },
+        "prediction": "Dig deep and trust your instincts in tough moments."
+    },
+    {
+        "sign": "Sagittarius",
+        "start": { "month": 11, "day": 22 },
+        "end": { "month": 12, "day": 21 },
+        "prediction": "Your adventurous side will uncover new possibilities."
+    },
+    {
+        "sign": "Capricorn",
+        "start": { "month": 12, "day": 22 },
+        "end": { "month": 1, "day": 19 },
+        "prediction": "Persistence will help you conquer obstacles."
+    },
+    {
+        "sign": "Aquarius",
+        "start": { "month": 1, "day": 20 },
+        "end": { "month": 2, "day": 18 },
+        "prediction": "Innovation is your strength; let it shine today."
+    },
+    {
+        "sign": "Pisces",
+        "start": { "month": 2, "day": 19 },
+        "end": { "month": 3, "day": 20 },
+        "prediction": "Let your imagination take you to new horizons."
+    },
+    {
+        "sign": "Aries",
+        "start": { "month": 3, "day": 21 },
+        "end": { "month": 4, "day": 19 },
+        "prediction": "Your courage will bring new opportunities today."
+    },
+    {
+        "sign": "Taurus",
+        "start": { "month": 4, "day": 20 },
+        "end": { "month": 5, "day": 20 },
+        "prediction": "Today is perfect for financial planning and stability."
+    },
+    {
+        "sign": "Gemini",
+        "start": { "month": 5, "day": 21 },
+        "end": { "month": 6, "day": 20 },
+        "prediction": "Expand your social circle and embrace new ideas."
+    },
+    {
+        "sign": "Cancer",
+        "start": { "month": 6, "day": 21 },
+        "end": { "month": 7, "day": 22 },
+        "prediction": "Embrace your nurturing qualities to create harmony."
+    },
+    {
+        "sign": "Leo",
+        "start": { "month": 7, "day": 23 },
+        "end": { "month": 8, "day": 22 },
+        "prediction": "Your creativity will inspire those around you."
+    },
+    {
+        "sign": "Virgo",
+        "start": { "month": 8, "day": 23 },
+        "end": { "month": 9, "day": 22 },
+        "prediction": "Focus on the details and success will follow."
+    },
+    {
+        "sign": "Libra",
+        "start": { "month": 9, "day": 23 },
+        "end": { "month": 10, "day": 22 },
+        "prediction": "Seek peace within yourself to navigate challenges."
+    },
+    {
+        "sign": "Scorpio",
+        "start": { "month": 10, "day": 23 },
+        "end": { "month": 11, "day": 21 },
+        "prediction": "Your intense focus will bring results today."
+    },
+    {
+        "sign": "Sagittarius",
+        "start": { "month": 11, "day": 22 },
+        "end": { "month": 12, "day": 21 },
+        "prediction": "Take risks, as they will lead to exciting opportunities."
+    },
+    {
+        "sign": "Capricorn",
+        "start": { "month": 12, "day": 22 },
+        "end": { "month": 1, "day": 19 },
+        "prediction": "Dedication to your goals will bring long-term rewards."
+    },
+    {
+        "sign": "Aquarius",
+        "start": { "month": 1, "day": 20 },
+        "end": { "month": 2, "day": 18 },
+        "prediction": "Your originality will make a lasting impact today."
+    },
+    {
+        "sign": "Pisces",
+        "start": { "month": 2, "day": 19 },
+        "end": { "month": 3, "day": 20 },
+        "prediction": "Embrace your dreams, they have the power to guide you."
+    },
+    {
+        "sign": "Aries",
+        "start": { "month": 3, "day": 21 },
+        "end": { "month": 4, "day": 19 },
+        "prediction": "Take charge and lead the way; today is your day."
+    },
+    {
+        "sign": "Taurus",
+        "start": { "month": 4, "day": 20 },
+        "end": { "month": 5, "day": 20 },
+        "prediction": "A calm and steady approach will bring success."
+    },
+    {
+        "sign": "Gemini",
+        "start": { "month": 5, "day": 21 },
+        "end": { "month": 6, "day": 20 },
+        "prediction": "Challenge your intellect and engage in new conversations."
+    },
+    {
+        "sign": "Cancer",
+        "start": { "month": 6, "day": 21 },
+        "end": { "month": 7, "day": 22 },
+        "prediction": "Your emotional intelligence will lead you to success."
+    },
+    {
+        "sign": "Leo",
+        "start": { "month": 7, "day": 23 },
+        "end": { "month": 8, "day": 22 },
+        "prediction": "Today, let your confidence speak louder than words."
+    },
+    {
+        "sign": "Virgo",
+        "start": { "month": 8, "day": 23 },
+        "end": { "month": 9, "day": 22 },
+        "prediction": "Embrace organization to bring clarity to your day."
+    },
+    {
+        "sign": "Libra",
+        "start": { "month": 9, "day": 23 },
+        "end": { "month": 10, "day": 22 },
+        "prediction": "Strive for balance in both work and personal life."
+    },
+    {
+        "sign": "Scorpio",
+        "start": { "month": 10, "day": 23 },
+        "end": { "month": 11, "day": 21 },
+        "prediction": "Your determination will help you overcome any obstacle."
+    },
+    {
+        "sign": "Sagittarius",
+        "start": { "month": 11, "day": 22 },
+        "end": { "month": 12, "day": 21 },
+        "prediction": "Look beyond the horizon; your next adventure awaits."
+    },
+    {
+        "sign": "Capricorn",
+        "start": { "month": 12, "day": 22 },
+        "end": { "month": 1, "day": 19 },
+        "prediction": "Your practical nature will keep you focused and grounded."
+    },
+    {
+        "sign": "Aquarius",
+        "start": { "month": 1, "day": 20 },
+        "end": { "month": 2, "day": 18 },
+        "prediction": "Step outside your comfort zone and try something new."
+    },
+    {
+        "sign": "Pisces",
+        "start": { "month": 2, "day": 19 },
+        "end": { "month": 3, "day": 20 },
+        "prediction": "Trust in your intuition to guide you to success."
+    },
+    {
+        "sign": "Aries",
+        "start": { "month": 3, "day": 21 },
+        "end": { "month": 4, "day": 19 },
+        "prediction": "A day for bold actions—take the lead and inspire others."
+    },
+    {
+        "sign": "Taurus",
+        "start": { "month": 4, "day": 20 },
+        "end": { "month": 5, "day": 20 },
+        "prediction": "Patience pays off today—focus on long-term goals."
+    },
+    {
+        "sign": "Gemini",
+        "start": { "month": 5, "day": 21 },
+        "end": { "month": 6, "day": 20 },
+        "prediction": "Seek new knowledge and connect with curious minds."
+    },
+    {
+        "sign": "Cancer",
+        "start": { "month": 6, "day": 21 },
+        "end": { "month": 7, "day": 22 },
+        "prediction": "Your caring nature will bring positive changes to your circle."
+    },
+    {
+        "sign": "Leo",
+        "start": { "month": 7, "day": 23 },
+        "end": { "month": 8, "day": 22 },
+        "prediction": "Creativity flows freely today—express yourself boldly."
+    },
+    {
+        "sign": "Virgo",
+        "start": { "month": 8, "day": 23 },
+        "end": { "month": 9, "day": 22 },
+        "prediction": "Pay attention to the details; they will make the difference."
+    },
+    {
+        "sign": "Libra",
+        "start": { "month": 9, "day": 23 },
+        "end": { "month": 10, "day": 22 },
+        "prediction": "Balance and harmony will guide you through challenges today."
+    },
+    {
+        "sign": "Scorpio",
+        "start": { "month": 10, "day": 23 },
+        "end": { "month": 11, "day": 21 },
+        "prediction": "Focus on your goals—today’s determination leads to success."
+    },
+    {
+        "sign": "Sagittarius",
+        "start": { "month": 11, "day": 22 },
+        "end": { "month": 12, "day": 21 },
+        "prediction": "Embrace adventure and take the road less traveled."
+    },
+    {
+        "sign": "Capricorn",
+        "start": { "month": 12, "day": 22 },
+        "end": { "month": 1, "day": 19 },
+        "prediction": "Hard work and discipline today will set you on a successful path."
+    },
+    {
+        "sign": "Aquarius",
+        "start": { "month": 1, "day": 20 },
+        "end": { "month": 2, "day": 18 },
+        "prediction": "Your inventive ideas will make a lasting impact today."
+    },
+    {
+        "sign": "Pisces",
+        "start": { "month": 2, "day": 19 },
+        "end": { "month": 3, "day": 20 },
+        "prediction": "Follow your instincts—they will lead you to clarity and peace."
+    },
+    {
+        "sign": "Aries",
+        "start": { "month": 3, "day": 21 },
+        "end": { "month": 4, "day": 19 },
+        "prediction": "The time is right for taking the initiative—lead by example."
+    },
+    {
+        "sign": "Taurus",
+        "start": { "month": 4, "day": 20 },
+        "end": { "month": 5, "day": 20 },
+        "prediction": "Take small, steady steps today and see long-term results."
+    },
+    {
+        "sign": "Gemini",
+        "start": { "month": 5, "day": 21 },
+        "end": { "month": 6, "day": 20 },
+        "prediction": "Let your curiosity guide you to new experiences."
+    },
+    {
+        "sign": "Cancer",
+        "start": { "month": 6, "day": 21 },
+        "end": { "month": 7, "day": 22 },
+        "prediction": "Today is perfect for nurturing relationships and building trust."
+    },
+    {
+        "sign": "Leo",
+        "start": { "month": 7, "day": 23 },
+        "end": { "month": 8, "day": 22 },
+        "prediction": "Let your creative side shine—express yourself with confidence."
+    },
+    {
+        "sign": "Virgo",
+        "start": { "month": 8, "day": 23 },
+        "end": { "month": 9, "day": 22 },
+        "prediction": "Your focus on details will lead you to solutions today."
+    },
+    {
+        "sign": "Libra",
+        "start": { "month": 9, "day": 23 },
+        "end": { "month": 10, "day": 22 },
+        "prediction": "Your diplomatic skills will help resolve conflicts today."
+    },
+    {
+        "sign": "Scorpio",
+        "start": { "month": 10, "day": 23 },
+        "end": { "month": 11, "day": 21 },
+        "prediction": "Harness your intense focus to achieve important goals."
+    },
+    {
+        "sign": "Sagittarius",
+        "start": { "month": 11, "day": 22 },
+        "end": { "month": 12, "day": 21 },
+        "prediction": "Follow your adventurous spirit today and explore new horizons."
+    },
+    {
+        "sign": "Capricorn",
+        "start": { "month": 12, "day": 22 },
+        "end": { "month": 1, "day": 19 },
+        "prediction": "Your discipline and work ethic will bring great rewards."
+    },
+    {
+        "sign": "Aquarius",
+        "start": { "month": 1, "day": 20 },
+        "end": { "month": 2, "day": 18 },
+        "prediction": "Embrace your unique ideas—they will make a difference today."
+    },
+    {
+        "sign": "Pisces",
+        "start": { "month": 2, "day": 19 },
+        "end": { "month": 3, "day": 20 },
+        "prediction": "Let your intuition guide your decisions today."
+    }
+  ]
 
+  
+      
+      
