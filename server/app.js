@@ -141,6 +141,15 @@ app.post('/api/stories', (req, res) => {
     );
 });
 
+// API route for comebacks
+app.get('/api/comeback', (req, res) => {
+    const comebacks = JSON.parse(fs.readFileSync('./server/data/comebacks.json', 'utf8'));
+
+    // Select a random comeback
+    const randomComeback = comebacks[Math.floor(Math.random() * comebacks.length)];
+    res.json({ comeback: randomComeback });
+});
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
