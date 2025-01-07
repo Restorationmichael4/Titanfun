@@ -1,1 +1,39 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stories</title>
+    <link href="css/styles.css" rel="stylesheet">
+</head>
+<body class="bg-black text-gold">
+    <header class="p-4 text-center">
+        <h1 class="text-3xl font-bold text-gradient">Stories</h1>
+    </header>
+    <main class="p-6">
+        <section>
+            <h2 class="text-2xl font-bold">Curated Stories</h2>
+            <div id="stories-container" class="space-y-4 mt-4"></div>
+        </section>
+        <section class="mt-6">
+            <h2 class="text-2xl font-bold">Submit Your Story</h2>
+            <form id="story-form" class="flex flex-col space-y-4">
+                <input type="text" id="story-title" placeholder="Story Title" class="p-2 text-black rounded-md" required>
+                <textarea id="story-content" placeholder="Your Story" class="p-2 text-black rounded-md" required></textarea>
+                <select id="story-category" class="p-2 text-black rounded-md">
+                    <option value="Funny">Funny</option>
+                    <option value="Inspirational">Inspirational</option>
+                    <option value="Romantic">Romantic</option>
+                </select>
+                <button type="submit" class="bg-gradient-to-r from-gold to-red px-4 py-2 rounded-md">
+                    Submit Story
+                </button>
+            </form>
+        </section>
+    </main>
+    <footer class="text-center text-sm text-gray-400 py-4">
+        © 2025 Titan Fun
+    </footer>
+    <script src="js/stories.js"></script>
+</body>
+</html>
