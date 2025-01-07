@@ -96,6 +96,51 @@ app.get('/api/meme', (req, res) => {
     res.json(randomMeme);
 });
 
+// Initialize SQLite database
+const db = new sqlite3.Database('./server/database/stories.db');
+
+// Create stories table if not exists
+db.serialize(() => {
+    db.run(`
+        CREATE TABLE IF NOT EXISTS stories (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT,
+            content TEXT,
+            category TEXT
+        )
+    `);
+});
+
+// API route to fetch stories
+app.get('/api/stories', (req, res) => {
+    db.all('SELECT * FROM stories', [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ error: 'Error fetching stories.' });
+        }
+        res.json(rows);
+    });
+});
+
+// API route to submit a new story
+app.post('/api/stories', (req, res) => {
+    const { title, content, category } = req.body;
+
+    if (!title || !content || !category) {
+        return res.status(400).json({ error: 'All fields are required.' });
+    }
+
+    db.run(
+        'INSERT INTO stories (title, content, category) VALUES (?, ?, ?)',
+        [title, content, category],
+        function (err) {
+            if (err) {
+                return res.status(500).json({ error: 'Error saving story.' });
+            }
+            res.status(201).json({ message: 'Story added successfully.' });
+        }
+    );
+});
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
