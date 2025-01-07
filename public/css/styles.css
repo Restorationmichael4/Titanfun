@@ -1,87 +1,77 @@
 /* General Body Styling */
 body {
     font-family: Arial, sans-serif;
-    color: gold; /* Text color */
-    background-color: #2c3e50; /* Solid dark blue background */
+    color: #333; /* Dark gray text for better readability */
+    background-color: #f0f0f0; /* Light gray background */
     margin: 0;
     padding: 0;
+    display: flex; /* Added for overall page centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    min-height: 100vh; /* Ensure body covers the whole viewport */
 }
 
 /* Container Styling */
 .container {
     max-width: 600px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #34495e; /* Slightly lighter blue for the container */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
-    color: #ffffff; /* White text inside the container */
+    padding: 30px; /* Increased padding */
+    background-color: #fff; /* White container background */
+    border-radius: 15px; /* Increased border radius */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Increased shadow */
+    color: #333; /* Dark gray text inside the container */
     text-align: center;
-}
-
-/* Button Styling */
-.button {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #ffffff;
-    background-color: #3498db; /* Blue button for better contrast */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none; /* Remove underline from links */
-    transition: background-color 0.3s, transform 0.2s; /* Added transform for effect */
-}
-
-.button:hover {
-    background-color: #2980b9; /* Darker blue on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover for effect */
 }
 
 /* Form Styling */
 form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Space between form elements */
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between form elements*/
 }
 
 form input[type="text"] {
-    padding: 10px;
+    padding: 12px;
     font-size: 16px;
-    border: 1px solid gold;
-    border-radius: 5px;
+    border: 2px solid #ccc; /* Light gray border */
+    border-radius: 8px; /* Rounded corners */
     outline: none;
-    background-color: #1c2833; /* Dark input field for contrast */
-    color: #ffffff;
+    background-color: #f9f9f9; /* Light input field */
+    color: #333;
+    width: calc(100% - 24px); /* Adjust width to account for padding */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+form input[type="text"]:focus{
+    border-color: #007bff; /* Highlight on focus */
+    box-shadow: 0 0 8px rgba(0,123,255,0.3); /* Add glow effect when focused */
 }
 
 form button {
-    padding: 10px;
+    padding: 14px 20px;
     font-size: 18px;
     font-weight: bold;
-    color: #ffffff;
-    background-color: #3498db; /* Blue button for better contrast */
+    color: #fff;
+    background-color: #28a745; /* Bright green button */
     border: none;
-    border-radius: 5px;
+    border-radius: 8px; /* Increased border-radius */
     cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s ease; /* Added transition for scaling */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Added button shadow for depth */
 }
 
 form button:hover {
-        background-color: #2980b9; /* Darker blue on hover */
+    background-color: #218838; /* Darker green on hover */
+    transform: scale(1.05); /* Scale up on hover for a more prominent effect */
 }
 
 /* Response Text Styling */
 #horoscopeResult {
     margin-top: 20px;
-    padding: 10px;
-    font-size: 18px;
+    padding: 15px;
+    font-size: 20px; /* Slightly larger text */
     font-weight: bold;
-    color: #2ecc71; /* Bright green text for responses */
-}
-
-/* Footer Styling */
-footer {
-    text-align: center;
-    color: #bdc3c7; /* Light gray text for the footer */
+    color: #28a745; /* Green text */
+    background-color: #f0f0f0; /* Light gray background for better contrast */
+    border-radius: 10px; /* Increased border radius */
+    text-align: center; /* Center-aligned response */
 }
