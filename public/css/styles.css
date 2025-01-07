@@ -1,26 +1,72 @@
+/* General Body Styling */
 body {
     font-family: Arial, sans-serif;
-    color: gold;
-    background-image: url('https://files.catbox.moe/2peyq9.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    color: gold; /* Text color */
+    background-color: #2c3e50; /* Solid dark blue background */
     margin: 0;
     padding: 0;
 }
 
-.feature-card {
-    display: block;
-    background: linear-gradient(to bottom, gold, red);
+/* Container Styling */
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #34495e; /* Slightly lighter blue for the container */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+    color: #ffffff; /* White text inside the container */
     text-align: center;
-    padding: 1rem;
-    color: black;
-    font-weight: bold;
-    border-radius: 0.5rem;
-    transition: transform 0.3s;
 }
 
-.feature-card:hover {
-    transform: scale(1.1);
-    color: white;
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between form elements */
+}
+
+form input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid gold;
+    border-radius: 5px;
+    outline: none;
+    background-color: #1c2833; /* Dark input field for contrast */
+    color: #ffffff;
+}
+
+form button {
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #e74c3c; /* Red button */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #c0392b; /* Darker red on hover */
+}
+
+/* Response Text Styling */
+#horoscopeResult {
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #2ecc71; /* Bright green text for responses */
+    background-color: #1c2833; /* Solid dark background for contrast */
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Subtle shadow for emphasis */
+}
+
+/* Footer Styling */
+footer {
+    text-align: center;
+    color: #bdc3c7; /* Light gray text for the footer */
+    margin-top: 30px;
 }
