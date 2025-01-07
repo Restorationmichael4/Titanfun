@@ -1,0 +1,15 @@
+---
+
+### **3. main.js**
+This file is used for common JS functions (if needed).
+
+```javascript
+// Utility function to toggle dark mode (example usage for night mode)
+function toggleDarkMode() {
+    const body = document.body;
+    body.classList.toggle('bg-black');
+    body.classList.toggle('text-gold');
+}
+
+// Example listener for dark mode toggle
+document.getElementById('dark-mode-toggle')?.addEventListener('click', toggleDarkMode);
