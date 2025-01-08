@@ -50,3 +50,76 @@ body {
     from { width: 0; }
     to { width: 100%; }
 }
+
+/* General form styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Add spacing between elements */
+    max-width: 500px; /* Ensure form width is not too large */
+    margin: 0 auto; /* Center the form */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for input box */
+textarea, input[type="text"], input[type="url"], input[type="number"] {
+    width: 100%; /* Full width */
+    height: 50px; /* Taller input box */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for dropdown/select box */
+select {
+    width: 100%; /* Full width */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: linear-gradient(to right, #f0f0f0, #e9e9e9);
+    cursor: pointer;
+}
+
+/* Styling for button */
+button {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(to right, #ff7e5f, #feb47b); /* Beautiful gradient */
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background: linear-gradient(to right, #feb47b, #ff7e5f);
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+button:active {
+    transform: scale(0.95); /* Slightly shrink on click */
+}
+
+/* Fix overlapping buttons */
+.result, .message {
+    margin-top: 20px; /* Add space from form */
+}
+
+/* Responsive Design for Smaller Screens */
+@media (max-width: 600px) {
+    form {
+        width: 90%; /* Adjust form width */
+    }
+    textarea, input[type="text"], select, button {
+        font-size: 14px; /* Adjust font size */
+    }
+}
