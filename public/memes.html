@@ -4,28 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memes</title>
-    <link href="css/styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-black text-gold">
-    <header class="p-4 text-center">
-        <h1 class="text-3xl font-bold text-gradient">Memes</h1>
-    </header>
-    <main class="flex flex-col items-center p-6 space-y-6">
-        <div id="meme-container" class="text-center">
-            <h2 id="meme-title" class="text-xl font-bold"></h2>
-            <img id="meme-image" src="" alt="Meme" class="max-w-full rounded-md">
-            <a id="download-btn" href="#" download class="block bg-gradient-to-r from-gold to-red px-4 py-2 mt-4 rounded-md">
-                Download Meme
-            </a>
+<body>
+    <div class="container">
+        <h1>Funny Memes</h1>
+        <div id="memesContainer" class="memes-container">
+            <!-- Memes will be dynamically loaded here -->
         </div>
-        <button id="next-meme-btn" class="bg-gradient-to-r from-gold to-red px-4 py-2 rounded-md">
-            Next Meme
-        </button>
-    </main>
-    <footer class="text-center text-sm text-gray-400 py-4">
-        © 2025 Titan Fun
+    </div>
+
+    <footer>
+        <p>© 2025 Titan Fun</p>
     </footer>
+
     <script src="js/memes.js"></script>
-    <script src="js/main.js"></script>
 </body>
 </html>
