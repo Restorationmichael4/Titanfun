@@ -194,6 +194,52 @@ app.post("/api/chatbot", async (req, res) => {
     }
 });
 
+const DOWNLOAD_APIS = {
+    ytmp3: "https://api.davidcyriltech.my.id/download/ytmp3?url=",
+    ytmp4: "https://api.davidcyriltech.my.id/download/ytmp4?url=",
+    facebook: "https://api.davidcyriltech.my.id/facebook?url=",
+    instagram: "https://api.davidcyriltech.my.id/instagram?url=",
+    tiktok: "https://api.davidcyriltech.my.id/download/tiktok?url=",
+    mediafire: "https://api.davidcyriltech.my.id/mediafire?url=",
+    twitter: "https://api.davidcyriltech.my.id/twitter?url=",
+    spotifydl: "https://api.davidcyriltech.my.id/spotifydl?url=",
+    gdrive: "https://api.davidcyriltech.my.id/gdrive?url=",
+};
+
+// Media downloader route
+app.post("/api/downloader", async (req, res) => {
+    const { platform, url } = req.body;
+
+    // Validate input
+    if (!platform || !url) {
+        return res.status(400).json({ error: "Platform and URL are required." });
+    }
+
+    const apiUrl = DOWNLOAD_APIS[platform];
+    if (!apiUrl) {
+        return res.status(400).json({ error: "Invalid platform selected." });
+    }
+
+    try {
+        const fullUrl = `${apiUrl}${encodeURIComponent(url)}`;
+        console.log(`Fetching download URL from: ${fullUrl}`);
+
+        // Request download link from the respective API
+        const apiResponse = await axios.get(fullUrl);
+
+        // Check if the API response contains a downloadable URL
+        const { downloadUrl } = apiResponse.data;
+        if (downloadUrl) {
+            res.json({ downloadUrl });
+        } else {
+            res.status(400).json({ error: "Failed to fetch the download URL." });
+        }
+    } catch (error) {
+        console.error("Downloader API error:", error.message);
+        res.status(500).json({ error: "An error occurred while processing your request." });
+    }
+});
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
