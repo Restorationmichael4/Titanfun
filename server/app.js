@@ -10,42 +10,40 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use(bodyParser.json());
 
+// Load Horoscope Data
+const horoscopeData = JSON.parse(fs.readFileSync(path.join(__dirname, "horoscope.json"), "utf-8"));
 
-// Load horoscope data
-const horoscopes = JSON.parse(fs.readFileSync('./server/data/horoscopes.json', 'utf8'));
+// Helper Function to Determine Zodiac Sign
+const getZodiacSign = (month, day) => {
+    for (let horoscope of horoscopeData) {
+        const { start, end, sign, prediction } = horoscope;
+        if (
+            (month === start.month && day >= start.day) ||
+            (month === end.month && day <= end.day)
+        ) {
+            return { sign, prediction };
+        }
+    }
+    return null;
+};
 
-// API route for horoscope
-app.get('/api/horoscope', (req, res) => {
-    const birthDate = req.query.birthdate;
+// Horoscope API
+app.post("/api/horoscope", (req, res) => {
+    const { month, day } = req.body;
 
-    if (!birthDate) {
-        return res.status(400).json({ error: 'Birthdate is required.' });
+    if (!month || !day) {
+        return res.status(400).json({ error: "Month and day are required." });
     }
 
-    // Simple validation
-    const today = new Date().toISOString().split('T')[0];
-    const userKey = `${birthDate}-${today}`;
-    const userLogs = JSON.parse(fs.readFileSync('./server/data/logs.json', 'utf8'));
+    const result = getZodiacSign(month, day);
 
-    if (userLogs[userKey]) {
-        return res.status(403).json({ error: 'You can only check your horoscope once per day.' });
+    if (result) {
+        return res.json(result);
+    } else {
+        return res.status(400).json({ error: "Invalid date provided." });
     }
-
-    // Determine the horoscope
-    const [day, month] = birthDate.split('/').map(Number);
-    const horoscope = horoscopes.find(h => h.start.month <= month && h.end.month >= month &&
-                                            h.start.day <= day && h.end.day >= day);
-
-    if (!horoscope) {
-        return res.status(404).json({ error: 'Invalid date. No horoscope found.' });
-    }
-
-    // Log user request
-    userLogs[userKey] = true;
-    fs.writeFileSync('./server/data/logs.json', JSON.stringify(userLogs, null, 2));
-
-    res.json({ horoscope: horoscope.prediction });
 });
+
 
 // API route for pick-up lines
 app.get('/api/pickup-line', (req, res) => {
