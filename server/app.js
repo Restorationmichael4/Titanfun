@@ -85,13 +85,9 @@ app.get('/api/dictionary', async (req, res) => {
     }
 });
 
-// API route for memes
-app.get('/api/meme', (req, res) => {
-    const memes = JSON.parse(fs.readFileSync('./server/data/memes.json', 'utf8'));
-
-    // Select a random meme
-    const randomMeme = memes[Math.floor(Math.random() * memes.length)];
-    res.json(randomMeme);
+// Serve the JSON file
+app.get("/api/memes", (req, res) => {
+    res.sendFile(path.join(__dirname, "memes.json"));
 });
 
 // Initialize SQLite database
