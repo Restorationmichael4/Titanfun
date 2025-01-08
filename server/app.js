@@ -464,7 +464,42 @@ app.get("/api/fun/:category", async (req, res) => {
         return res.status(500).json({ error: `Failed to fetch ${category}` });
     }
 });
-         
+
+const toolsEndpoints = {
+    obsfuscate: "https://api.giftedtech.web.id/api/tools/encrypt?apikey=gifted&code=",
+    ebinary: "https://api.giftedtech.web.id/api/tools/ebinary?apikey=gifted&query=",
+    dbinary: "https://api.giftedtech.web.id/api/tools/dbinary?apikey=gifted&query=",
+    ssweb: "https://api.giftedtech.web.id/api/tools/ssweb?apikey=gifted&url=",
+    createqr: "https://api.giftedtech.web.id/api/tools/createqr?apikey=gifted&text=",
+    ttp: "https://api.giftedtech.web.id/api/tools/ttp?apikey=gifted&query=",
+    fancy: "https://api.giftedtech.web.id/api/tools/fancy?apikey=gifted&text=",
+};
+
+app.post("/api/tools/:tool", async (req, res) => {
+    const { tool } = req.params;
+    const { query, color } = req.body;
+    const endpoint = toolsEndpoints[tool];
+
+    if (!endpoint) {
+        return res.status(400).json({ error: "Invalid tool" });
+    }
+
+    let apiUrl = endpoint + encodeURIComponent(query);
+
+    // Append color for TTP requests
+    if (tool === "ttp") {
+        apiUrl += `&color=${encodeURIComponent(color)}`;
+    }
+
+    try {
+        const { data } = await axios.get(apiUrl);
+        res.json(data);
+    } catch (error) {
+        console.error(`Error with ${tool}:`, error);
+        res.status(500).json({ error: `Failed to process ${tool}` });
+    }
+});
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
