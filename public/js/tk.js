@@ -28,11 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         result.innerHTML = "Loading...";
 
         try {
-            const response = await fetch(`/api/tools/${tool}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ query, color }),
-            });
+            const response = await fetch(`/api/tools/${tool}?query=${encodeURIComponent(query)}${tool === "ttp" && color ? `&color=${encodeURIComponent(color)}` : ""}`);
             const data = await response.json();
 
             if (response.ok) {
@@ -47,32 +43,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function renderResult(tool, data) {
-        if (tool === "obsfuscate" || tool === "ebinary" || tool === "dbinary") {
+        if (tool === "ebinary" || tool === "dbinary") {
             result.innerHTML = `
-                <p><strong>Result:</strong> ${data.result || data.encrypted_code}</p>
-                <button onclick="copyText('${data.result || data.encrypted_code}')">Copy</button>
+                <p><strong>Result:</strong> ${data.result}</p>
+                <button onclick="copyText('${data.result}')">Copy</button>
             `;
-        } else if (tool === "ssweb" || tool === "createqr") {
+        } else if (tool === "createqr" || tool === "ssweb" || tool === "ttp") {
             result.innerHTML = `
-                <img src="${data.result || data.url}" alt="Preview" style="max-width: 100%; height: auto;">
-                <a href="${data.result || data.url}" download>
-                    <button>Download</button>
-                </a>
-            `;
-        } else if (tool === "ttp") {
-            result.innerHTML = `
-                <img src="${data.results[0].url}" alt="Sticker" style="max-width: 100%; height: auto;">
-                <a href="${data.results[0].url}" download>
+                <img src="${data.url || data.result}" alt="Preview" style="max-width: 100%; height: auto;">
+                <a href="${data.url || data.result}" download>
                     <button>Download</button>
                 </a>
             `;
         } else if (tool === "fancy") {
+            const randomText = data.results[Math.floor(Math.random() * data.results.length)].result;
             result.innerHTML = `
-                <h3>Fancy Text Variations:</h3>
-                <ul>
-                    ${data.results.map((item) => `<li>${item.result}</li>`).join("")}
-                </ul>
+                <p><strong>Fancy Text:</strong> ${randomText}</p>
+                <button onclick="copyText('${randomText}')">Copy</button>
             `;
+        } else {
+            result.innerHTML = `<p style="color: red;">Unsupported tool selected.</p>`;
         }
     }
 });
