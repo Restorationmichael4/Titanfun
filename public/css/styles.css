@@ -123,3 +123,50 @@ button:active {
         font-size: 14px; /* Adjust font size */
     }
 }
+
+/* Styling the memes container */
+.memes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Individual meme card */
+.meme-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.meme-card img {
+    max-width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.meme-card button {
+    padding: 10px 15px;
+    font-size: 14px;
+    color: white;
+    background: linear-gradient(to right, #ff7e5f, #feb47b);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.meme-card button:hover {
+    background: linear-gradient(to right, #feb47b, #ff7e5f);
+    transform: scale(1.05);
+}
+
+.meme-card button:active {
+    transform: scale(0.95);
+        }
