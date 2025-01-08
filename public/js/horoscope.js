@@ -1,16 +1,31 @@
-document.getElementById('horoscope-form').addEventListener('submit', async (e) => {
+document.getElementById("horoscopeForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const birthDate = document.getElementById('birth-date').value;
-    const resultDiv = document.getElementById('horoscope-result');
+    const month = document.getElementById("month").value;
+    const day = document.getElementById("day").value;
+    const resultDiv = document.getElementById("result");
+
+    resultDiv.innerHTML = "Processing...";
 
     try {
-        const response = await fetch(`/api/horoscope?birthdate=${birthDate}`);
-        if (!response.ok) throw new Error('Error fetching horoscope.');
+        const response = await fetch("/api/horoscope", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ month: parseInt(month), day: parseInt(day) })
+        });
 
         const data = await response.json();
-        resultDiv.innerHTML = `<p>Your horoscope for today:</p><p>${data.horoscope}</p>`;
-    } catch (err) {
-        resultDiv.innerHTML = `<p class="text-red-500">Error: ${err.message}</p>`;
+
+        if (response.ok) {
+            resultDiv.innerHTML = `
+                <h2>Your Zodiac Sign: ${data.sign}</h2>
+                <p>${data.prediction}</p>
+            `;
+        } else {
+            resultDiv.innerHTML = `<p style="color:red;">${data.error}</p>`;
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        resultDiv.innerHTML = `<p style="color:red;">An error occurred. Please try again.</p>`;
     }
 });
