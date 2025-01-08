@@ -399,6 +399,43 @@ app.post("/api/tools", async (req, res) => {
         res.status(500).json({ error: "An error occurred while processing your request." });
     }
 });
+
+const FUN_APIS = {
+    truth: "https://api.davidcyriltech.my.id/truth",
+    dare: "https://api.davidcyriltech.my.id/dare",
+    pickupline: "https://api.davidcyriltech.my.id/pickupline",
+    fact: "https://api.davidcyriltech.my.id/fact"
+};
+
+app.post("/api/fun", async (req, res) => {
+    const { feature } = req.body;
+
+    if (!feature || !FUN_APIS[feature]) {
+        return res.status(400).json({ error: "Invalid feature selected." });
+    }
+
+    try {
+        const apiUrl = FUN_APIS[feature];
+        console.log(`Fetching from: ${apiUrl}`);
+
+        const apiResponse = await axios.get(apiUrl);
+        const responseData = apiResponse.data;
+
+        if (feature === "truth" || feature === "dare") {
+            return res.json({
+                type: responseData.type,
+                question: responseData.question
+            });
+        } else if (feature === "pickupline") {
+            return res.json({ pickupline: responseData.pickupline });
+        } else if (feature === "fact") {
+            return res.json({ fact: responseData.fact });
+        }
+    } catch (error) {
+        console.error("Fun Feature API error:", error.message);
+        res.status(500).json({ error: "An error occurred while processing your request." });
+    }
+});
          
 // Start the server
 app.listen(port, () => {
