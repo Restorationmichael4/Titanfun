@@ -150,34 +150,46 @@ app.get('/api/comeback', (req, res) => {
     res.json({ comeback: randomComeback });
 });
 
-// Chatbot features
+
+// Chatbot API base URLs
 const CHATBOT_APIS = {
     chatgpt: "https://api.davidcyriltech.my.id/ai/chatbot?query=",
     blackbox: "https://api.davidcyriltech.my.id/blackbox?q=",
     llama3: "https://api.davidcyriltech.my.id/ai/llama3?text=",
     metaai: "https://api.davidcyriltech.my.id/ai/metaai?text=",
     gpt3: "https://api.davidcyriltech.my.id/ai/gpt3?text=",
-    gpt4omini: "https://api.davidcyriltech.my.id/ai/gpt4omini?text=",
+    gpt4omini: "https://api.davidcyriltech.my.id/ai/gpt4omini?text="
 };
 
-// Chatbot API route
+// Chatbot route
 app.post("/api/chatbot", async (req, res) => {
     const { model, query } = req.body;
 
+    // Validate input
     if (!model || !query) {
         return res.status(400).json({ error: "Model and query are required." });
     }
 
+    // Get the API URL for the selected model
     const apiUrl = CHATBOT_APIS[model];
     if (!apiUrl) {
         return res.status(400).json({ error: "Invalid chatbot model selected." });
     }
 
+    // Construct the full API URL
+    const fullUrl = `${apiUrl}${encodeURIComponent(query)}`;
+
     try {
-        const apiResponse = await axios.get(`${apiUrl}${encodeURIComponent(query)}`);
-        res.json({ response: apiResponse.data.response || "No response available." });
+        console.log(`Fetching response from: ${fullUrl}`); // Debugging log
+
+        // Fetch response from the chatbot API
+        const apiResponse = await axios.get(fullUrl);
+
+        // Handle different response formats
+        const responseText = apiResponse.data.response || apiResponse.data.answer || "No response available.";
+        res.json({ response: responseText });
     } catch (error) {
-        console.error("Chatbot API error:", error.message);
+        console.error("Chatbot API error:", error.response?.data || error.message);
         res.status(500).json({ error: "Failed to fetch response from the chatbot." });
     }
 });
