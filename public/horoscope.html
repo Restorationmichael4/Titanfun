@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Horoscope</title>
-    <link href="css/styles.css" rel="stylesheet">
+    <title>Horoscope</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-black text-gold">
-    <header class="p-4 text-center">
-        <h1 class="text-3xl font-bold text-gradient">Daily Horoscope</h1>
-    </header>
-    <main class="p-6">
-        <form id="horoscope-form" class="flex flex-col items-center space-y-4">
-            <input type="text" id="birth-date" placeholder="Enter your birthdate (DD/MM)" 
-                   class="p-2 text-black rounded-md" required>
-            <button type="submit" class="bg-gradient-to-r from-gold to-red px-4 py-2 rounded-md">
-                Get Horoscope
-            </button>
+<body>
+    <div class="container">
+        <h1>Daily Horoscope</h1>
+        <form id="horoscopeForm">
+            <label for="month">Enter Birth Month:</label>
+            <input type="number" id="month" min="1" max="12" placeholder="Month (1-12)" required>
+
+            <label for="day">Enter Birth Day:</label>
+            <input type="number" id="day" min="1" max="31" placeholder="Day (1-31)" required>
+
+            <button type="submit">Get Horoscope</button>
         </form>
-        <div id="horoscope-result" class="mt-6 text-center text-lg"></div>
-    </main>
-    <footer class="text-center text-sm text-gray-400 py-4">
-        © 2025 Titan Fun
+
+        <div id="result"></div>
+    </div>
+
+    <footer>
+        <p>© 2025 Titan Fun</p>
     </footer>
+
     <script src="js/horoscope.js"></script>
-    <script src="js/main.js"></script>
 </body>
 </html>
