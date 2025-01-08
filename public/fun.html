@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fun Features</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Fun Features</h1>
+        <form id="funForm">
+            <label for="feature">Select Feature:</label>
+            <select id="feature" required>
+                <option value="truth">Truth</option>
+                <option value="dare">Dare</option>
+                <option value="pickupline">Toasting</option>
+                <option value="fact">Facts</option>
+            </select>
+
+            <button type="submit">Get Result</button>
+        </form>
+
+        <div id="message" class="hidden">Processing...</div>
+        <div id="result" class="result"></div>
+    </div>
+
+    <footer>
+        <p>© 2025 Titan Fun</p>
+    </footer>
+    <script src="js/fun.js"></script>
+</body>
+</html>
