@@ -319,12 +319,14 @@ app.post("/api/downloader", async (req, res) => {
     }
 });
 
+
+
 // API Endpoints for Tools
 const TOOL_APIS = {
     imgscan: "https://api.davidcyriltech.my.id/imgscan?url=",
     lyrics: "https://api.davidcyriltech.my.id/lyrics?t={title}&a={artist}",
     remini: "https://api.davidcyriltech.my.id/remini?url=",
-    tts: "https://api.davidcyriltech.my.id/tts?text={text}&voice={voice}",
+    tts: "https://api.davidcyriltech.my.id/tts?text={text}%20world&voice=Bianca",
     voiceai: "https://api.davidcyriltech.my.id/voiceai?text={text}&model={model}",
     weather: "https://api.davidcyriltech.my.id/weather?city=",
     bible: "https://api.davidcyriltech.my.id/bible?reference={reference}",
@@ -347,8 +349,10 @@ app.post("/api/tools", async (req, res) => {
         // Build dynamic URL for APIs that require additional parameters
         if (tool === "lyrics") {
             apiUrl = apiUrl.replace("{title}", encodeURIComponent(inputs.title)).replace("{artist}", encodeURIComponent(inputs.artist));
-        } else if (tool === "tts" || tool === "voiceai") {
-            apiUrl = apiUrl.replace("{text}", encodeURIComponent(inputs.text)).replace("{voice}", encodeURIComponent(inputs.voice || inputs.model));
+        } else if (tool === "tts") {
+            apiUrl = apiUrl.replace("{text}", encodeURIComponent(inputs.text));
+        } else if (tool === "voiceai") {
+            apiUrl = apiUrl.replace("{text}", encodeURIComponent(inputs.text)).replace("{model}", inputs.model);
         } else if (tool === "bible") {
             apiUrl = apiUrl.replace("{reference}", encodeURIComponent(inputs.reference));
         } else if (tool === "diffusion" || tool === "flux") {
@@ -365,33 +369,27 @@ app.post("/api/tools", async (req, res) => {
 
         // Handle response based on tool type
         if (tool === "remini" || tool === "diffusion" || tool === "flux") {
-            // Directly return enhanced/downloadable image URLs
-            return res.json({ downloadUrl: apiUrl });
+            return res.json({ mediaUrl: apiUrl });
         } else if (tool === "tts" || tool === "voiceai") {
-            // Return downloadable audio URL
             return res.json({
-                downloadUrl: responseData.audioUrl || responseData.audio_url,
+                mediaUrl: responseData.audioUrl || responseData.audio_url,
                 voiceName: responseData.voice_name || responseData.model
             });
         } else if (tool === "lyrics") {
-            // Return lyrics and metadata
             return res.json({
                 title: responseData.title,
                 artist: responseData.artist,
                 lyrics: responseData.lyrics
             });
         } else if (tool === "weather") {
-            // Return weather details
             return res.json(responseData.data);
         } else if (tool === "bible") {
-            // Return Bible verse
             return res.json({
                 reference: responseData.reference,
                 text: responseData.text,
                 translation: responseData.translation
             });
         } else if (tool === "imgscan") {
-            // Return image description
             return res.json({ description: responseData.result });
         } else {
             return res.json(responseData);
