@@ -16,7 +16,12 @@ document.getElementById("tool").addEventListener("change", (e) => {
             <label for="artist">Artist Name:</label>
             <input type="text" id="artist" placeholder="Enter artist name" required>
         `;
-    } else if (tool === "tts" || tool === "voiceai") {
+    } else if (tool === "tts") {
+        inputFields.innerHTML = `
+            <label for="text">Text:</label>
+            <input type="text" id="text" placeholder="Enter text to convert to speech" required>
+        `;
+    } else if (tool === "voiceai") {
         inputFields.innerHTML = `
             <label for="text">Text:</label>
             <input type="text" id="text" placeholder="Enter text to process" required>
@@ -44,7 +49,7 @@ document.getElementById("tool").addEventListener("change", (e) => {
     } else if (tool === "bible") {
         inputFields.innerHTML = `
             <label for="reference">Bible Reference:</label>
-            <input type="text" id="reference" placeholder="e.g., John 3:16" required>
+            <input type="text" id="reference" placeholder="e.g., john+3:16" required>
         `;
     } else if (tool === "diffusion" || tool === "flux") {
         inputFields.innerHTML = `
@@ -85,19 +90,27 @@ document.getElementById("toolsForm").addEventListener("submit", async (e) => {
         const data = await response.json();
 
         if (response.ok) {
-            // Display results dynamically based on tool response
-            if (data.downloadUrl) {
-                resultDiv.innerHTML = `
-                    <a href="${data.downloadUrl}" download class="btn">Download</a>
-                `;
+            if (data.mediaUrl) {
+                if (tool === "tts" || tool === "voiceai") {
+                    resultDiv.innerHTML = `
+                        <audio controls>
+                            <source src="${data.mediaUrl}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                        <a href="${data.mediaUrl}" download>Download</a>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <img src="${data.mediaUrl}" alt="Generated Media" style="max-width: 100%; margin: 10px auto;">
+                        <a href="${data.mediaUrl}" download>Download</a>
+                    `;
+                }
             } else if (data.lyrics) {
                 resultDiv.innerHTML = `
                     <h3>${data.title} by ${data.artist}</h3>
                     <pre>${data.lyrics}</pre>
                     <button onclick="navigator.clipboard.writeText('${data.lyrics}')">Copy Lyrics</button>
                 `;
-            } else if (data.description) {
-                resultDiv.textContent = data.description;
             } else if (data.text) {
                 resultDiv.innerHTML = `
                     <p>${data.text}</p>
@@ -122,6 +135,6 @@ document.getElementById("toolsForm").addEventListener("submit", async (e) => {
         }
     } catch (error) {
         console.error("Error:", error);
-        messageDiv.textContent = "An error occurred.";
+        messageDiv.textContent = "An error occurred. Please try again.";
     }
 });
