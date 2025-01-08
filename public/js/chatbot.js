@@ -1,41 +1,36 @@
-// Chatbot form submission handler
 document.getElementById("chatbotForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Get selected model and query from the form
-    const model = document.getElementById("model").value;
+    const chatbot = document.getElementById("chatbot").value;
     const query = document.getElementById("query").value.trim();
+    const messageDiv = document.getElementById("message");
     const responseDiv = document.getElementById("response");
-    const responseText = document.getElementById("responseText");
 
-    // Validate input
+    messageDiv.textContent = "Processing...";
+    responseDiv.innerHTML = "";
+
     if (!query) {
-        alert("Please enter a query.");
+        messageDiv.textContent = "Please enter a query.";
         return;
     }
 
-    // Show a loading message while waiting for the response
-    responseText.textContent = "Fetching response...";
-    responseDiv.classList.remove("hidden");
-
     try {
-        // Send POST request to the backend
-        const response = await fetch(`/api/chatbot`, {
+        const response = await fetch("/api/chatbot", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ model, query }),
+            body: JSON.stringify({ chatbot, query })
         });
 
         const data = await response.json();
 
-        // Handle response from backend
         if (response.ok) {
-            responseText.textContent = data.response;
+            responseDiv.innerHTML = `<p><strong>${chatbot}:</strong> ${data.message}</p>`;
+            messageDiv.textContent = "Success!";
         } else {
-            responseText.textContent = `Error: ${data.error || "Failed to fetch response."}`;
+            messageDiv.textContent = `Error: ${data.error || "Failed to process the request."}`;
         }
     } catch (error) {
         console.error("Error:", error);
-        responseText.textContent = "Error: Could not fetch response.";
+        messageDiv.textContent = "An error occurred. Please try again.";
     }
 });
