@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Downloader</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Universal Media Downloader</h1>
+        <form id="downloaderForm">
+            <label for="platform">Choose a Platform:</label>
+            <select id="platform" required>
+                <option value="ytmp3">YouTube to MP3</option>
+                <option value="ytmp4">YouTube to MP4</option>
+                <option value="facebook">Facebook Video Downloader</option>
+                <option value="instagram">Instagram Video Downloader</option>
+                <option value="tiktok">TikTok Video Downloader</option>
+                <option value="mediafire">MediaFire Downloader</option>
+                <option value="twitter">Twitter Media Downloader</option>
+                <option value="spotifydl">Spotify Music Downloader</option>
+                <option value="gdrive">Google Drive File Downloader</option>
+            </select>
+
+            <label for="url">Enter the URL:</label>
+            <input type="text" id="url" placeholder="Paste the media URL here..." required>
+
+            <button type="submit">Download</button>
+        </form>
+
+        <div id="message" class="hidden">
+            <p id="statusMessage"></p>
+        </div>
+    </div>
+    <footer>
+        <p>© 2025 Titan Fun</p>
+    </footer>
+    <script src="js/downloader.js"></script>
+</body>
+              </html>
