@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tools</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Tools</h1>
+        <div class="form-section">
+            <label for="toolSelect">Select Tool:</label>
+            <select id="toolSelect">
+                <option value="obsfuscate">Obsfuscate JS</option>
+                <option value="ebinary">Encrypt Binary</option>
+                <option value="dbinary">Decrypt Binary</option>
+                <option value="ssweb">Screenshot Website</option>
+                <option value="createqr">Create QR</option>
+                <option value="ttp">Text to Sticker</option>
+                <option value="fancy">Fancy Text</option>
+            </select>
+            <div id="extraInput" style="display: none;">
+                <label for="colorInput">Color (for TTP):</label>
+                <input type="text" id="colorInput" placeholder="e.g., green">
+            </div>
+            <input type="text" id="toolQuery" placeholder="Enter your query here">
+            <button id="submitButton">Submit</button>
+        </div>
+        <div id="result" class="result-section"></div>
+    </div>
+
+    <script src="js/tk.js"></script>
+</body>
+  </html>
