@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tools</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Tools</h1>
+        <form id="toolsForm">
+            <label for="tool">Select Tool:</label>
+            <select id="tool" required>
+                <option value="imgscan">Image Scan</option>
+                <option value="lyrics">Lyrics Finder</option>
+                <option value="remini">Remini (Image Enhancement)</option>
+                <option value="tts">Text to Speech</option>
+                <option value="voiceai">Voice AI</option>
+                <option value="weather">Weather Info</option>
+                <option value="bible">Bible Verse</option>
+                <option value="diffusion">Stable Diffusion</option>
+                <option value="flux">Flux AI</option>
+            </select>
+
+            <div id="inputFields">
+                <!-- Dynamic inputs will appear here -->
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <div id="message" class="hidden">Processing...</div>
+        <div id="result" class="result"></div>
+    </div>
+
+    <footer>
+        <p>© 2025 Titan Fun</p>
+    </footer>
+    <script src="js/tools.js"></script>
+</body>
+</html>
