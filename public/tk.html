@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toolkits</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>TToolkit</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Tools</h1>
-        <div class="form-section">
-            <label for="toolSelect">Select Tool:</label>
+    <header>
+        <h1>TITAN Tools</h1>
+    </header>
+
+    <main>
+        <section>
+            <label for="toolSelect">Choose a Tool:</label>
             <select id="toolSelect">
-                <option value="obsfuscate">Obsfuscate JS</option>
                 <option value="ebinary">Encrypt Binary</option>
                 <option value="dbinary">Decrypt Binary</option>
                 <option value="ssweb">Screenshot Website</option>
@@ -20,16 +22,31 @@
                 <option value="ttp">Text to Sticker</option>
                 <option value="fancy">Fancy Text</option>
             </select>
-            <div id="extraInput" style="display: none;">
-                <label for="colorInput">Color (for TTP):</label>
-                <input type="text" id="colorInput" placeholder="e.g., green">
-            </div>
-            <input type="text" id="toolQuery" placeholder="Enter your query here">
-            <button id="submitButton">Submit</button>
-        </div>
-        <div id="result" class="result-section"></div>
-    </div>
+        </section>
 
-    <script src="js/tk.js"></script>
+        <section>
+            <label for="toolQuery">Enter Query:</label>
+            <input type="text" id="toolQuery" placeholder="Enter your query here...">
+        </section>
+
+        <section id="extraInput" style="display: none;">
+            <label for="colorInput">Enter Color (for Stickers):</label>
+            <input type="text" id="colorInput" placeholder="e.g., red, blue, green">
+        </section>
+
+        <section>
+            <button id="submitButton">Submit</button>
+        </section>
+
+        <section id="result">
+            <!-- Result will be rendered here -->
+        </section>
+    </main>
+
+    <footer>
+        <p>©Titan Tech</p>
+    </footer>
+
+    <script src="toolkit.js"></script>
 </body>
-  </html>
+</html>
