@@ -161,36 +161,36 @@ const CHATBOT_APIS = {
     gpt4omini: "https://api.davidcyriltech.my.id/ai/gpt4omini?text="
 };
 
-// Chatbot route
 app.post("/api/chatbot", async (req, res) => {
-    const { model, query } = req.body;
+    const { chatbot, query } = req.body;
 
-    // Validate input
-    if (!model || !query) {
-        return res.status(400).json({ error: "Model and query are required." });
+    if (!chatbot || !CHATBOT_APIS[chatbot]) {
+        return res.status(400).json({ error: "Invalid chatbot selected." });
     }
-
-    // Get the API URL for the selected model
-    const apiUrl = CHATBOT_APIS[model];
-    if (!apiUrl) {
-        return res.status(400).json({ error: "Invalid chatbot model selected." });
+    if (!query) {
+        return res.status(400).json({ error: "Query is required." });
     }
-
-    // Construct the full API URL
-    const fullUrl = `${apiUrl}${encodeURIComponent(query)}`;
 
     try {
-        console.log(`Fetching response from: ${fullUrl}`); // Debugging log
+        const apiUrl = `${CHATBOT_APIS[chatbot]}${encodeURIComponent(query)}`;
+        console.log(`Fetching from: ${apiUrl}`);
 
-        // Fetch response from the chatbot API
-        const apiResponse = await axios.get(fullUrl);
+        const apiResponse = await axios.get(apiUrl);
+        const responseData = apiResponse.data;
 
-        // Handle different response formats
-        const responseText = apiResponse.data.response || apiResponse.data.answer || "No response available.";
-        res.json({ response: responseText });
+        // Parse response based on chatbot
+        if (chatbot === "chatgpt") {
+            return res.json({ message: responseData.result });
+        } else if (chatbot === "blackbox") {
+            return res.json({ message: responseData.response });
+        } else if (["llama3", "metaai", "gpt3", "gpt4omini"].includes(chatbot)) {
+            return res.json({ message: responseData.message });
+        } else {
+            return res.status(400).json({ error: "Failed to process chatbot response." });
+        }
     } catch (error) {
-        console.error("Chatbot API error:", error.response?.data || error.message);
-        res.status(500).json({ error: "Failed to fetch response from the chatbot." });
+        console.error("Chatbot API error:", error.message);
+        res.status(500).json({ error: "An error occurred while processing your request." });
     }
 });
 
