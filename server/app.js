@@ -465,40 +465,6 @@ app.get("/api/fun/:category", async (req, res) => {
     }
 });
 
-const toolsEndpoints = {
-    ebinary: "https://api.giftedtech.web.id/api/tools/ebinary?apikey=gifted&query=",
-    dbinary: "https://api.giftedtech.web.id/api/tools/dbinary?apikey=gifted&query=",
-    ssweb: "https://api.giftedtech.web.id/api/tools/ssweb?apikey=gifted&url=",
-    createqr: "https://api.giftedtech.web.id/api/tools/createqr?apikey=gifted&text=",
-    ttp: "https://api.giftedtech.web.id/api/tools/ttp?apikey=gifted&query=",
-    fancy: "https://api.giftedtech.web.id/api/tools/fancy?apikey=gifted&text=",
-};
-
-app.get("/api/tools/:tool", async (req, res) => {
-    const { tool } = req.params;
-    const { query, color } = req.query;
-    const endpoint = toolsEndpoints[tool];
-
-    if (!endpoint) {
-        return res.status(400).json({ error: "Invalid tool selected." });
-    }
-
-    let apiUrl = endpoint + encodeURIComponent(query);
-
-    // Append color for TTP requests
-    if (tool === "ttp" && color) {
-        apiUrl += `&color=${encodeURIComponent(color)}`;
-    }
-
-    try {
-        const { data } = await axios.get(apiUrl);
-        res.json(data);
-    } catch (error) {
-        console.error(`Error with ${tool}:`, error.response?.data || error.message);
-        res.status(500).json({ error: `Failed to fetch data for ${tool}.` });
-    }
-});
-
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
