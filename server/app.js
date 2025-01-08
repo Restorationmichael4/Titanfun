@@ -431,6 +431,39 @@ app.post("/api/fun", async (req, res) => {
         res.status(500).json({ error: "An error occurred while processing your request." });
     }
 });
+
+// Define Fun Feature Endpoints
+const funEndpoints = {
+    jokes: "https://api.giftedtech.web.id/api/fun/jokes?apikey=gifted",
+    advice: "https://api.giftedtech.web.id/api/fun/advice?apikey=gifted",
+    quotes: "https://api.giftedtech.web.id/api/fun/quotes?apikey=gifted",
+    motivation: "https://api.giftedtech.web.id/api/fun/motivation?apikey=gifted",
+    thankyou: "https://api.giftedtech.web.id/api/fun/thankyou?apikey=gifted",
+    gratitude: "https://api.giftedtech.web.id/api/fun/gratitude?apikey=gifted",
+    friendship: "https://api.giftedtech.web.id/api/fun/friendship?apikey=gifted",
+    christmas: "https://api.giftedtech.web.id/api/fun/christmas?apikey=gifted",
+    newyear: "https://api.giftedtech.web.id/api/fun/newyear?apikey=gifted",
+    mothersday: "https://api.giftedtech.web.id/api/fun/mothersday?apikey=gifted",
+    fathersday: "https://api.giftedtech.web.id/api/fun/fathersday?apikey=gifted",
+};
+
+// Fetch Fun Feature Data
+app.get("/api/fun/:category", async (req, res) => {
+    const { category } = req.params;
+    const endpoint = funEndpoints[category];
+
+    if (!endpoint) {
+        return res.status(400).json({ error: "Invalid category" });
+    }
+
+    try {
+        const { data } = await axios.get(endpoint);
+        return res.json(data);
+    } catch (error) {
+        console.error(`Error fetching ${category}:`, error);
+        return res.status(500).json({ error: `Failed to fetch ${category}` });
+    }
+});
          
 // Start the server
 app.listen(port, () => {
