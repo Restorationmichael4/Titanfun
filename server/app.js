@@ -150,6 +150,38 @@ app.get('/api/comeback', (req, res) => {
     res.json({ comeback: randomComeback });
 });
 
+// Chatbot features
+const CHATBOT_APIS = {
+    chatgpt: "https://api.davidcyriltech.my.id/ai/chatbot?query=",
+    blackbox: "https://api.davidcyriltech.my.id/blackbox?q=",
+    llama3: "https://api.davidcyriltech.my.id/ai/llama3?text=",
+    metaai: "https://api.davidcyriltech.my.id/ai/metaai?text=",
+    gpt3: "https://api.davidcyriltech.my.id/ai/gpt3?text=",
+    gpt4omini: "https://api.davidcyriltech.my.id/ai/gpt4omini?text=",
+};
+
+// Chatbot API route
+app.post("/api/chatbot", async (req, res) => {
+    const { model, query } = req.body;
+
+    if (!model || !query) {
+        return res.status(400).json({ error: "Model and query are required." });
+    }
+
+    const apiUrl = CHATBOT_APIS[model];
+    if (!apiUrl) {
+        return res.status(400).json({ error: "Invalid chatbot model selected." });
+    }
+
+    try {
+        const apiResponse = await axios.get(`${apiUrl}${encodeURIComponent(query)}`);
+        res.json({ response: apiResponse.data.response || "No response available." });
+    } catch (error) {
+        console.error("Chatbot API error:", error.message);
+        res.status(500).json({ error: "Failed to fetch response from the chatbot." });
+    }
+});
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
