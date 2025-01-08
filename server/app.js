@@ -326,7 +326,7 @@ const TOOL_APIS = {
     imgscan: "https://api.davidcyriltech.my.id/imgscan?url=",
     lyrics: "https://api.davidcyriltech.my.id/lyrics?t={title}&a={artist}",
     remini: "https://api.davidcyriltech.my.id/remini?url=",
-    tts: "https://api.davidcyriltech.my.id/tts?text={text}%20world&voice=Bianca",
+    tts: "https://api.davidcyriltech.my.id/tts?text={text}&voice=Bianca",
     voiceai: "https://api.davidcyriltech.my.id/voiceai?text={text}&model={model}",
     weather: "https://api.davidcyriltech.my.id/weather?city=",
     bible: "https://api.davidcyriltech.my.id/bible?reference={reference}",
