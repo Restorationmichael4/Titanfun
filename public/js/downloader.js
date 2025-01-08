@@ -6,34 +6,46 @@ document.getElementById("downloaderForm").addEventListener("submit", async (e) =
     const messageDiv = document.getElementById("message");
     const statusMessage = document.getElementById("statusMessage");
 
-    // Validate input
     if (!url) {
         alert("Please enter a valid URL.");
         return;
     }
 
-    // Show loading message
     statusMessage.textContent = "Processing your request...";
     messageDiv.classList.remove("hidden");
 
     try {
-        // Send request to the backend
         const response = await fetch(`/api/downloader`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ platform, url }),
+            body: JSON.stringify({ platform, url })
         });
 
         const data = await response.json();
 
         if (response.ok && data.downloadUrl) {
-            // Trigger the download in the browser
-            const downloadLink = document.createElement("a");
-            downloadLink.href = data.downloadUrl;
-            downloadLink.download = ""; // Let the browser determine the filename
-            downloadLink.click();
+            let outputHtml = `<a href="${data.downloadUrl}" download class="btn">Download Now</a>`;
 
-            statusMessage.textContent = "Download started successfully!";
+            if (data.thumbnail) {
+                outputHtml = `
+                    <img src="${data.thumbnail}" alt="Thumbnail" style="max-width: 300px; display: block; margin: 10px auto;">
+                    ${outputHtml}
+                `;
+            }
+
+            if (data.title) {
+                outputHtml = `<p>Title: ${data.title}</p>${outputHtml}`;
+            }
+
+            if (data.quality) {
+                outputHtml = `<p>Quality: ${data.quality}</p>${outputHtml}`;
+            }
+
+            if (data.fileName) {
+                outputHtml = `<p>File Name: ${data.fileName}</p>${outputHtml}`;
+            }
+
+            statusMessage.innerHTML = outputHtml;
         } else {
             statusMessage.textContent = `Error: ${data.error || "Failed to process the request."}`;
         }
