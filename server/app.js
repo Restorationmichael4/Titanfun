@@ -194,6 +194,7 @@ app.post("/api/chatbot", async (req, res) => {
     }
 });
 
+// API Endpoints for Different Platforms
 const DOWNLOAD_APIS = {
     ytmp3: "https://api.davidcyriltech.my.id/download/ytmp3?url=",
     ytmp4: "https://api.davidcyriltech.my.id/download/ytmp4?url=",
@@ -203,14 +204,14 @@ const DOWNLOAD_APIS = {
     mediafire: "https://api.davidcyriltech.my.id/mediafire?url=",
     twitter: "https://api.davidcyriltech.my.id/twitter?url=",
     spotifydl: "https://api.davidcyriltech.my.id/spotifydl?url=",
-    gdrive: "https://api.davidcyriltech.my.id/gdrive?url=",
+    gdrive: "https://api.davidcyriltech.my.id/gdrive?url="
 };
 
-// Media downloader route
+// Downloader Route
 app.post("/api/downloader", async (req, res) => {
     const { platform, url } = req.body;
 
-    // Validate input
+    // Validate Input
     if (!platform || !url) {
         return res.status(400).json({ error: "Platform and URL are required." });
     }
@@ -221,25 +222,103 @@ app.post("/api/downloader", async (req, res) => {
     }
 
     try {
+        // Call External API
         const fullUrl = `${apiUrl}${encodeURIComponent(url)}`;
-        console.log(`Fetching download URL from: ${fullUrl}`);
-
-        // Request download link from the respective API
+        console.log(`Fetching from: ${fullUrl}`);
         const apiResponse = await axios.get(fullUrl);
+        const responseData = apiResponse.data;
 
-        // Check if the API response contains a downloadable URL
-        const { downloadUrl } = apiResponse.data;
-        if (downloadUrl) {
-            res.json({ downloadUrl });
-        } else {
-            res.status(400).json({ error: "Failed to fetch the download URL." });
+        // Parse Response Based on Platform
+        if (platform === "ytmp3" || platform === "ytmp4") {
+            if (responseData.status === 200 && responseData.success && responseData.result) {
+                const { quality, title, thumbnail, download_url } = responseData.result;
+                return res.json({
+                    downloadUrl: download_url,
+                    quality,
+                    title,
+                    thumbnail
+                });
+            }
+        } else if (platform === "facebook") {
+            if (responseData.status === 200 && responseData.success && responseData.video) {
+                const { thumbnail, downloads } = responseData.video;
+                const bestQuality = downloads.find((item) =>
+                    item.quality.toLowerCase().includes("hd")
+                ) || downloads[0];
+                if (bestQuality) {
+                    return res.json({
+                        downloadUrl: bestQuality.downloadUrl,
+                        quality: bestQuality.quality,
+                        thumbnail
+                    });
+                }
+            }
+        } else if (platform === "instagram") {
+            if (responseData.status === 200 && responseData.success) {
+                return res.json({
+                    downloadUrl: responseData.downloadUrl,
+                    thumbnail: responseData.thumbnail
+                });
+            }
+        } else if (platform === "tiktok") {
+            if (responseData.status === 200 && responseData.success && responseData.result) {
+                const { video, music, desc, author } = responseData.result;
+                return res.json({
+                    downloadUrl: video,
+                    description: desc,
+                    thumbnail: author.avatar,
+                    authorName: author.nickname,
+                    musicDownloadUrl: music
+                });
+            }
+        } else if (platform === "mediafire") {
+            if (responseData.success) {
+                const { downloadLink, fileName, size, mimeType } = responseData;
+                return res.json({
+                    downloadUrl: downloadLink,
+                    fileName,
+                    size,
+                    mimeType
+                });
+            }
+        } else if (platform === "spotifydl") {
+            if (responseData.status === 200 && responseData.success) {
+                const { DownloadLink, title, channel, duration, thumbnail } = responseData;
+                return res.json({
+                    downloadUrl: DownloadLink,
+                    title,
+                    channel,
+                    duration,
+                    thumbnail
+                });
+            }
+        } else if (platform === "twitter") {
+            if (responseData.status === 200 && responseData.success) {
+                const { video_hd, video_sd, audio, thumbnail, description } = responseData;
+                return res.json({
+                    downloadUrl: video_hd || video_sd || audio,
+                    thumbnail,
+                    description
+                });
+            }
+        } else if (platform === "gdrive") {
+            if (responseData.status === 200 && responseData.success) {
+                const { download_link, name } = responseData;
+                return res.json({
+                    downloadUrl: download_link,
+                    fileName: name
+                });
+            }
         }
+
+        // No valid response
+        return res.status(400).json({ error: "Failed to process the request." });
     } catch (error) {
         console.error("Downloader API error:", error.message);
         res.status(500).json({ error: "An error occurred while processing your request." });
     }
 });
-
+         
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
