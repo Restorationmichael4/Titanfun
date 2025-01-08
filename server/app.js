@@ -318,6 +318,89 @@ app.post("/api/downloader", async (req, res) => {
         res.status(500).json({ error: "An error occurred while processing your request." });
     }
 });
+
+// API Endpoints for Tools
+const TOOL_APIS = {
+    imgscan: "https://api.davidcyriltech.my.id/imgscan?url=",
+    lyrics: "https://api.davidcyriltech.my.id/lyrics?t={title}&a={artist}",
+    remini: "https://api.davidcyriltech.my.id/remini?url=",
+    tts: "https://api.davidcyriltech.my.id/tts?text={text}&voice={voice}",
+    voiceai: "https://api.davidcyriltech.my.id/voiceai?text={text}&model={model}",
+    weather: "https://api.davidcyriltech.my.id/weather?city=",
+    bible: "https://api.davidcyriltech.my.id/bible?reference={reference}",
+    diffusion: "https://api.davidcyriltech.my.id/diffusion?prompt=",
+    flux: "https://api.davidcyriltech.my.id/flux?prompt="
+};
+
+// Universal Tool Handler
+app.post("/api/tools", async (req, res) => {
+    const { tool, inputs } = req.body;
+
+    // Validate input
+    if (!tool || !TOOL_APIS[tool]) {
+        return res.status(400).json({ error: "Invalid tool selected." });
+    }
+
+    try {
+        let apiUrl = TOOL_APIS[tool];
+
+        // Build dynamic URL for APIs that require additional parameters
+        if (tool === "lyrics") {
+            apiUrl = apiUrl.replace("{title}", encodeURIComponent(inputs.title)).replace("{artist}", encodeURIComponent(inputs.artist));
+        } else if (tool === "tts" || tool === "voiceai") {
+            apiUrl = apiUrl.replace("{text}", encodeURIComponent(inputs.text)).replace("{voice}", encodeURIComponent(inputs.voice || inputs.model));
+        } else if (tool === "bible") {
+            apiUrl = apiUrl.replace("{reference}", encodeURIComponent(inputs.reference));
+        } else if (tool === "diffusion" || tool === "flux") {
+            apiUrl = `${apiUrl}${encodeURIComponent(inputs.prompt)}`;
+        } else if (tool === "weather") {
+            apiUrl = `${apiUrl}${encodeURIComponent(inputs.city)}`;
+        } else if (tool === "imgscan" || tool === "remini") {
+            apiUrl = `${apiUrl}${encodeURIComponent(inputs.url)}`;
+        }
+
+        console.log(`Fetching from: ${apiUrl}`);
+        const apiResponse = await axios.get(apiUrl);
+        const responseData = apiResponse.data;
+
+        // Handle response based on tool type
+        if (tool === "remini" || tool === "diffusion" || tool === "flux") {
+            // Directly return enhanced/downloadable image URLs
+            return res.json({ downloadUrl: apiUrl });
+        } else if (tool === "tts" || tool === "voiceai") {
+            // Return downloadable audio URL
+            return res.json({
+                downloadUrl: responseData.audioUrl || responseData.audio_url,
+                voiceName: responseData.voice_name || responseData.model
+            });
+        } else if (tool === "lyrics") {
+            // Return lyrics and metadata
+            return res.json({
+                title: responseData.title,
+                artist: responseData.artist,
+                lyrics: responseData.lyrics
+            });
+        } else if (tool === "weather") {
+            // Return weather details
+            return res.json(responseData.data);
+        } else if (tool === "bible") {
+            // Return Bible verse
+            return res.json({
+                reference: responseData.reference,
+                text: responseData.text,
+                translation: responseData.translation
+            });
+        } else if (tool === "imgscan") {
+            // Return image description
+            return res.json({ description: responseData.result });
+        } else {
+            return res.json(responseData);
+        }
+    } catch (error) {
+        console.error("API error:", error.message);
+        res.status(500).json({ error: "An error occurred while processing your request." });
+    }
+});
          
 // Start the server
 app.listen(port, () => {
