@@ -7,81 +7,67 @@
     <link href="css/styles.css" rel="stylesheet">
     <style>
         body {
-            background-color: #1a1a1d;
-            color: #f1f1f1;
             font-family: Arial, sans-serif;
-        }
-        header {
-            text-align: center;
-            padding: 20px;
-        }
-        header h1 {
-            font-size: 3rem;
-            color: #e91e63;
+            background-color: #f4f4f4;
             margin: 0;
-        }
-        form {
-            max-width: 600px;
-            margin: 20px auto;
             padding: 20px;
-            background-color: #333;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
-        form label {
-            display: block;
-            margin-bottom: 15px;
-        }
-        form input, form select, form button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        form button {
-            background-color: #e91e63;
-            color: #fff;
-            cursor: pointer;
-        }
-        form button:hover {
-            background-color: #c2185b;
-        }
-        #triviaContainer {
-            max-width: 700px;
-            margin: 20px auto;
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
             text-align: center;
-        }
-        #triviaContainer h2 {
-            font-size: 2rem;
             margin-bottom: 20px;
-        }
-        #answers li {
-            list-style: none;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #444;
             border-radius: 5px;
+        }
+
+        main {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        input[type="number"],
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
+            font-size: 16px;
         }
-        #answers li:hover {
-            background-color: #555;
+
+        button:hover {
+            background-color: #45a049;
         }
-        #results {
-            font-size: 1.2rem;
+
+        footer {
+            text-align: center;
             margin-top: 20px;
         }
-        #backToTrivia {
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #backToTrivia:hover {
-            background-color: #0056b3;
+
+        footer p {
+            color: #777;
         }
     </style>
 </head>
@@ -134,7 +120,7 @@
                     <option value="hard">Hard</option>
                 </select>
             </label>
-            <label>
+             <label>
                 Type:
                 <select id="type">
                     <option value="">Any Type</option>
@@ -144,20 +130,28 @@
             </label>
             <button type="submit">Start Trivia</button>
         </form>
-
-        <div id="triviaContainer" style="display: none;">
-            <h2 id="question"></h2>
-            <ul id="answers"></ul>
-        </div>
-
-        <div id="resultsContainer" style="display: none;">
-            <div id="results"></div>
-            <button id="backToTrivia">Back to Trivia</button>
-        </div>
     </main>
     <footer class="text-center text-sm text-gray-400 py-4">
         <p>&copy; 2025 Titan Trivia</p>
     </footer>
-    <script src="js/trivia.js"></script>
+    <script>
+        document.getElementById("triviaForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const questionCount = document.getElementById("questionCount").value;
+            const category = document.getElementById("category").value;
+            const difficulty = document.getElementById("difficulty").value;
+            const type = document.getElementById("type").value;
+
+            const params = new URLSearchParams({
+                amount: questionCount,
+                category,
+                difficulty,
+                type
+            });
+
+            // Redirect to question.html with query parameters
+            window.location.href = question.html?${params.toString()};
+        });
+    </script>
 </body>
-                        </html>
+</html>
