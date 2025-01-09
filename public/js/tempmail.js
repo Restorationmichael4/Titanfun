@@ -91,3 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
 // Copy text function
 function copyText(text) {
     navigator.clipboard.writeText(text).then(() => {
+alert("Copied to clipboard!");
+    }).catch(err => {
+        alert("Failed to copy: " + err);
+    });
+    }
