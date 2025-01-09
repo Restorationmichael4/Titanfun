@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jokes</title>
+    <link href="css/styles.css" rel="stylesheet">
+</head>
+<body class="bg-black text-gold">
+    <header class="p-4 text-center">
+        <h1 class="text-4xl font-bold text-gradient">Laugh Out Loud - Jokes</h1>
+    </header>
+    <main class="p-6 text-center">
+        <div class="mb-4">
+            <label for="jokeCategory" class="block text-xl mb-2">Select Joke Category:</label>
+            <select id="jokeCategory" class="text-black p-2 border border-gray-300 rounded">
+                <option value="Any">Any</option>
+                <option value="Misc">Miscellaneous</option>
+                <option value="Programming">Programming</option>
+                <option value="Dark">Dark</option>
+                <option value="Pun">Pun</option>
+                <option value="Spooky">Spooky</option>
+                <option value="Christmas">Christmas</option>
+            </select>
+        </div>
+        <button id="fetchJoke" class="bg-blue-500 text-white px-4 py-2 rounded">Get Joke</button>
+        <div id="jokeDisplay" class="mt-6 text-xl font-semibold text-white"></div>
+    </main>
+    <footer class="text-center text-sm text-gray-400 py-4">
+        © 2025 Titan Fun
+    </footer>
+    <script src="js/jokes.js"></script>
+</body>
+                  </html>
