@@ -3,46 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stories</title>
+    <title>Stories - Titan Fun</title>
     <link href="css/styles.css" rel="stylesheet">
 </head>
 <body class="bg-black text-gold">
     <header class="p-4 text-center">
-        <h1 class="text-3xl font-bold text-gradient">Stories</h1>
+        <h1 class="text-4xl font-bold text-gradient">Stories</h1>
     </header>
-    <main class="p-6">
-        <section>
-            <h2 class="text-2xl font-bold">Curated Stories</h2>
-            <div id="stories-container" class="space-y-4 mt-4"></div>
-        </section>
-        <section class="mt-6">
-            <h2 class="text-2xl font-bold">Submit Your Story</h2>
-            <form id="story-form" class="flex flex-col space-y-4">
-                <input type="text" id="story-title" placeholder="Story Title" class="p-2 text-black rounded-md" required>
-                <textarea id="story-content" placeholder="Your Story" class="p-2 text-black rounded-md" required></textarea>
-                <select id="story-category" class="p-2 text-black rounded-md">
-                    <option value="Funny">Funny</option>
-                    <option value="Inspirational">Inspirational</option>
-                    <option value="Romantic">Romantic</option>
-                </select>
-                <button type="submit" class="bg-gradient-to-r from-gold to-red px-4 py-2 rounded-md">
-                    Submit Story
-                </button>
+
+    <!-- Main Content -->
+    <main class="p-4">
+        <!-- Submit a Story -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Submit Your Story</h2>
+            <form id="story-form" class="bg-gray-900 p-4 rounded shadow-md">
+                <input type="text" id="story-title-input" class="w-full p-2 mb-4 bg-gray-800 text-white rounded" placeholder="Title" required>
+                <textarea id="story-content-input" class="w-full p-2 mb-4 bg-gray-800 text-white rounded" placeholder="Content" required></textarea>
+                <input type="text" id="story-category-input" class="w-full p-2 mb-4 bg-gray-800 text-white rounded" placeholder="Category" required>
+                <button type="submit" class="bg-gold text-black px-4 py-2 rounded font-bold">Submit</button>
             </form>
         </section>
+
+        <!-- List of Stories -->
+        <section>
+            <h2 class="text-2xl font-bold mb-4">Stories</h2>
+            <ul id="stories-list" class="list-disc list-inside bg-gray-900 p-4 rounded shadow-md">
+                <!-- Stories will be dynamically inserted here -->
+            </ul>
+        </section>
+
+        <!-- Trending Stories -->
+        <section class="mt-8">
+            <h2 class="text-2xl font-bold mb-4">Trending Stories</h2>
+            <ul id="trending-list" class="list-disc list-inside bg-gray-900 p-4 rounded shadow-md">
+                <!-- Trending stories will be dynamically inserted here -->
+            </ul>
+        </section>
     </main>
+
+    <!-- Footer -->
     <footer class="text-center text-sm text-gray-400 py-4">
-        © 2025 Titan Fun
+        <p>&copy; 2025 Titan Fun</p>
+        <p>
+            Contact Us:
+            <a href="https://whatsapp.com/channel/0029Vauvc2hIXnln7w8oEj3I" target="_blank" class="text-gold">WhatsApp</a> |
+            <a href="https://t.me/+kSPKjHmaXeo3MzI0" target="_blank" class="text-gold">Telegram</a>
+        </p>
     </footer>
+
+    <!-- Scripts -->
     <script src="js/stories.js"></script>
 </body>
-    <footer style="text-align: center; padding: 20px; background-color: #f4f4f9; border-top: 1px solid #ccc;">
-    <p>Contact Us:</p>
-    <a href="https://whatsapp.com/channel/0029Vauvc2hIXnln7w8oEj3I" target="_blank" style="text-decoration: none; color: #25D366; font-weight: bold;">
-        WhatsApp
-    </a> | 
-    <a href="https://t.me/+kSPKjHmaXeo3MzI0" target="_blank" style="text-decoration: none; color: #0088CC; font-weight: bold;">
-        Telegram
-    </a>
-    </footer>
 </html>
