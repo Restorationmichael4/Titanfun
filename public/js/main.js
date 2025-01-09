@@ -44,3 +44,9 @@ setTimeout(() => {
         document.body.removeChild(popup);
     });
 }, 20 * 60 * 1000); // 20 minutes in milliseconds
+
+// Hamburger Menu Toggle
+document.getElementById("menu-toggle").addEventListener("click", () => {
+    const menu = document.getElementById("menu-items");
+    menu.style.display = menu.style.display === "none" || menu.style.display === "" ? "block" : "none";
+});
