@@ -183,7 +183,6 @@ app.get('/api/comeback', (req, res) => {
     res.json({ comeback: randomComeback });
 });
 
-
 // Chatbot API base URLs
 const CHATBOT_APIS = {
     chatgpt: "https://api.davidcyriltech.my.id/ai/chatbot?query=",
@@ -191,11 +190,15 @@ const CHATBOT_APIS = {
     llama3: "https://api.davidcyriltech.my.id/ai/llama3?text=",
     metaai: "https://api.davidcyriltech.my.id/ai/metaai?text=",
     gpt3: "https://api.davidcyriltech.my.id/ai/gpt3?text=",
-    gpt4omini: "https://api.davidcyriltech.my.id/ai/gpt4omini?text="
+    gpt4omini: "https://api.davidcyriltech.my.id/ai/gpt4omini?text=",
+    letmegpt: "https://api.giftedtech.web.id/api/ai/letmegpt?apikey=gifted&query=",
+    simsimi: "https://api.giftedtech.web.id/api/ai/simsimi?apikey=gifted&query=",
+    luminai: "https://api.giftedtech.web.id/api/ai/luminai?apikey=gifted&query=",
+    wwdgpt: "https://api.giftedtech.web.id/api/ai/wwdgpt?apikey=gifted&prompt="
 };
 
-app.post("/api/chatbot", async (req, res) => {
-    const { chatbot, query } = req.body;
+app.get("/api/chatbot", async (req, res) => {
+    const { chatbot, query } = req.query;
 
     if (!chatbot || !CHATBOT_APIS[chatbot]) {
         return res.status(400).json({ error: "Invalid chatbot selected." });
@@ -212,11 +215,11 @@ app.post("/api/chatbot", async (req, res) => {
         const responseData = apiResponse.data;
 
         // Parse response based on chatbot
-        if (chatbot === "chatgpt") {
+        if (chatbot === "chatgpt" || chatbot === "letmegpt") {
             return res.json({ message: responseData.result });
         } else if (chatbot === "blackbox") {
             return res.json({ message: responseData.response });
-        } else if (["llama3", "metaai", "gpt3", "gpt4omini"].includes(chatbot)) {
+        } else if (["llama3", "metaai", "gpt3", "gpt4omini", "simsimi", "luminai", "wwdgpt"].includes(chatbot)) {
             return res.json({ message: responseData.message });
         } else {
             return res.status(400).json({ error: "Failed to process chatbot response." });
