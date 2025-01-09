@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const axios = require('axios');
 const app = express();
-const sqlite3 = require('sqlite3').verbose();
+const BetterSQLite3 = require('better-sqlite3');
 const bodyParser = require('body-parser');
 const port = 3000;
 const path = require("path");
@@ -92,28 +92,27 @@ app.get("/api/memes", (req, res) => {
 });
 
 // Initialize SQLite database
-const db = new sqlite3.Database('./server/database/stories.db');
+const db = new BetterSQLite3('./server/database/stories.db');
 
-// Create stories table if not exists
-db.serialize(() => {
-    db.run(`
-        CREATE TABLE IF NOT EXISTS stories (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT,
-            content TEXT,
-            category TEXT
-        )
-    `);
-});
+// Ensure the stories table exists
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS stories (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        content TEXT,
+        category TEXT
+    )
+`).run();
 
 // API route to fetch stories
 app.get('/api/stories', (req, res) => {
-    db.all('SELECT * FROM stories', [], (err, rows) => {
-        if (err) {
-            return res.status(500).json({ error: 'Error fetching stories.' });
-        }
-        res.json(rows);
-    });
+    try {
+        const stories = db.prepare('SELECT * FROM stories').all();
+        res.json(stories);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error fetching stories.' });
+    }
 });
 
 // API route to submit a new story
@@ -124,16 +123,16 @@ app.post('/api/stories', (req, res) => {
         return res.status(400).json({ error: 'All fields are required.' });
     }
 
-    db.run(
-        'INSERT INTO stories (title, content, category) VALUES (?, ?, ?)',
-        [title, content, category],
-        function (err) {
-            if (err) {
-                return res.status(500).json({ error: 'Error saving story.' });
-            }
-            res.status(201).json({ message: 'Story added successfully.' });
-        }
-    );
+    try {
+        const insert = db.prepare(
+            'INSERT INTO stories (title, content, category) VALUES (?, ?, ?)'
+        );
+        insert.run(title, content, category);
+        res.status(201).json({ message: 'Story added successfully.' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error saving story.' });
+    }
 });
 
 // API route for comebacks
