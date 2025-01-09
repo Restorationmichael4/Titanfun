@@ -465,6 +465,72 @@ app.get("/api/fun/:category", async (req, res) => {
     }
 });
 
+const tempMailEndpoints = {
+    create: "https://api.giftedtech.web.id/api/tempmail/create?apikey=gifted",
+    check: "https://api.giftedtech.web.id/api/tempmail/check?apikey=gifted",
+    content: "https://api.giftedtech.web.id/api/tempmail/content?apikey=gifted",
+    delete: "https://api.giftedtech.web.id/api/tempmail/delete?apikey=gifted",
+};
+
+// Create Temporary Email
+app.get("/api/tempmail/create", async (req, res) => {
+    try {
+        const { data } = await axios.get(tempMailEndpoints.create);
+        res.json(data);
+    } catch (error) {
+        console.error("Error creating temporary email:", error.response?.data || error.message);
+        res.status(500).json({ error: "Failed to create temporary email." });
+    }
+});
+
+// Check for New Mail
+app.get("/api/tempmail/check", async (req, res) => {
+    const { username, domain } = req.query;
+    if (!username || !domain) {
+        return res.status(400).json({ error: "Username and domain are required." });
+    }
+    const url = `${tempMailEndpoints.check}&username=${encodeURIComponent(username)}&domain=${encodeURIComponent(domain)}`;
+    try {
+        const { data } = await axios.get(url);
+        res.json(data);
+    } catch (error) {
+        console.error("Error checking temporary email:", error.response?.data || error.message);
+        res.status(500).json({ error: "Failed to check temporary email." });
+    }
+});
+
+// Get Email Content
+app.get("/api/tempmail/content", async (req, res) => {
+    const { username, domain, emailId } = req.query;
+    if (!username || !domain || !emailId) {
+        return res.status(400).json({ error: "Username, domain, and email ID are required." });
+    }
+    const url = `${tempMailEndpoints.content}&username=${encodeURIComponent(username)}&domain=${encodeURIComponent(domain)}&emailId=${encodeURIComponent(emailId)}`;
+    try {
+        const { data } = await axios.get(url);
+        res.json(data);
+    } catch (error) {
+        console.error("Error retrieving email content:", error.response?.data || error.message);
+        res.status(500).json({ error: "Failed to retrieve email content." });
+    }
+});
+
+// Delete Temporary Email
+app.get("/api/tempmail/delete", async (req, res) => {
+    const { username, domain } = req.query;
+    if (!username || !domain) {
+        return res.status(400).json({ error: "Username and domain are required." });
+    }
+    const url = `${tempMailEndpoints.delete}&username=${encodeURIComponent(username)}&domain=${encodeURIComponent(domain)}`;
+    try {
+        const { data } = await axios.get(url);
+        res.json(data);
+    } catch (error) {
+        console.error("Error deleting temporary email:", error.response?.data || error.message);
+        res.status(500).json({ error: "Failed to delete temporary email." });
+    }
+});
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
