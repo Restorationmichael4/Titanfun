@@ -6,7 +6,7 @@ const BetterSQLite3 = require('better-sqlite3');
 const bodyParser = require('body-parser');
 const port = 3000;
 const path = require("path");
-const bodyParser = require('body-parser');
+
 
 
 app.use(express.json());
