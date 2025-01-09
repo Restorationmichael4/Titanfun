@@ -69,8 +69,19 @@
             background-color: #555;
         }
         #results {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             margin-top: 20px;
+        }
+        #backToTrivia {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #backToTrivia:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -134,11 +145,14 @@
             <button type="submit">Start Trivia</button>
         </form>
 
-        <div id="triviaContainer" class="hidden">
+        <div id="triviaContainer" style="display: none;">
             <h2 id="question"></h2>
             <ul id="answers"></ul>
-            <button id="nextQuestion" class="hidden">Next Question</button>
-            <div id="results" class="hidden"></div>
+        </div>
+
+        <div id="resultsContainer" style="display: none;">
+            <div id="results"></div>
+            <button id="backToTrivia">Back to Trivia</button>
         </div>
     </main>
     <footer class="text-center text-sm text-gray-400 py-4">
@@ -146,4 +160,4 @@
     </footer>
     <script src="js/trivia.js"></script>
 </body>
-</html>
+                        </html>
