@@ -6,6 +6,8 @@ const BetterSQLite3 = require('better-sqlite3');
 const bodyParser = require('body-parser');
 const port = 3000;
 const path = require("path");
+const bodyParser = require('body-parser');
+
 
 app.use(express.json());
 app.use(express.static('public'));
@@ -94,24 +96,48 @@ app.get("/api/memes", (req, res) => {
 // Initialize SQLite database
 const db = new BetterSQLite3('./server/database/stories.db');
 
-// Ensure the stories table exists
+
+// Ensure the stories table exists with the `views` column
 db.prepare(`
     CREATE TABLE IF NOT EXISTS stories (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT,
         content TEXT,
-        category TEXT
+        category TEXT,
+        views INTEGER DEFAULT 0
     )
 `).run();
 
-// API route to fetch stories
+// API route to fetch only story titles
 app.get('/api/stories', (req, res) => {
     try {
-        const stories = db.prepare('SELECT * FROM stories').all();
+        const stories = db.prepare('SELECT id, title FROM stories').all();
         res.json(stories);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Error fetching stories.' });
+    }
+});
+
+// API route to fetch a full story and increment views
+app.get('/api/stories/:id', (req, res) => {
+    const storyId = req.params.id;
+
+    try {
+        // Increment the view count
+        db.prepare('UPDATE stories SET views = views + 1 WHERE id = ?').run(storyId);
+
+        // Fetch the full story
+        const story = db.prepare('SELECT * FROM stories WHERE id = ?').get(storyId);
+
+        if (!story) {
+            return res.status(404).json({ error: 'Story not found.' });
+        }
+
+        res.json(story);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error fetching the story.' });
     }
 });
 
@@ -132,6 +158,19 @@ app.post('/api/stories', (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Error saving story.' });
+    }
+});
+
+// API route to fetch trending stories
+app.get('/api/stories/trending', (req, res) => {
+    try {
+        const trending = db.prepare(
+            'SELECT id, title, views FROM stories ORDER BY views DESC LIMIT 5'
+        ).all();
+        res.json(trending);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error fetching trending stories.' });
     }
 });
 
