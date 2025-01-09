@@ -15,11 +15,7 @@ document.getElementById("chatbotForm").addEventListener("submit", async (e) => {
     }
 
     try {
-        const response = await fetch("/api/chatbot", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chatbot, query })
-        });
+        const response = await fetch(`/api/chatbot?chatbot=${chatbot}&query=${encodeURIComponent(query)}`);
 
         const data = await response.json();
 
