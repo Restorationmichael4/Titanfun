@@ -186,3 +186,28 @@ container {
     background-color: #f9f9f9;
     text-align: left;
 }
+
+nav {
+    position: relative;
+}
+
+#menu-items {
+    position: absolute;
+    width: 100%;
+    top: 40px;
+    left: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+#menu-items li {
+    border-bottom: 1px solid #555;
+}
+
+#menu-items li:hover {
+    background-color: #555;
+}
+
+#menu-items li a:hover {
+    color: #007BFF;
+}
