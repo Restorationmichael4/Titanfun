@@ -1,143 +1,130 @@
-let triviaData = [];
-let currentQuestionIndex = 0;
-let score = 0;
-let totalQuestions = 0;
-
-// Fetch Trivia Data
-function fetchTriviaData(url) {
-    fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-            triviaData = data.results;
-            totalQuestions = triviaData.length;
-            currentQuestionIndex = 0;
-            score = 0;
-            displayQuestion();
-        })
-        .catch((error) => {
-            console.error("Error fetching trivia data:", error);
-        });
-}
-
-// Display Question
-function displayQuestion() {
-    if (currentQuestionIndex >= triviaData.length) {
-        displayResults();
-        return;
-    }
-
-    const questionData = triviaData[currentQuestionIndex];
-    const questionContainer = document.getElementById("triviaContainer");
-    const answersContainer = document.getElementById("answers");
-
-    // Clear previous content
-    questionContainer.querySelector("#question").textContent = decodeHTML(questionData.question);
-    answersContainer.innerHTML = "";
-
-    // Shuffle and display answers
-    const answers = [...questionData.incorrect_answers, questionData.correct_answer].sort(() => Math.random() - 0.5);
-
-    answers.forEach((answer) => {
-        const answerItem = document.createElement("li");
-        answerItem.textContent = decodeHTML(answer);
-        answerItem.addEventListener("click", () => handleAnswer(answer === questionData.correct_answer, answerItem));
-        answersContainer.appendChild(answerItem);
-    });
-}
-
-// Handle Answer Selection
-function handleAnswer(isCorrect, selectedAnswerElement) {
-    const questionData = triviaData[currentQuestionIndex];
-    const answersContainer = document.getElementById("answers");
-
-    // Highlight the correct answer
-    answersContainer.childNodes.forEach((answerElement) => {
-        if (answerElement.textContent === decodeHTML(questionData.correct_answer)) {
-            answerElement.style.backgroundColor = "green";
-        } else {
-            answerElement.style.backgroundColor = "red";
-        }
-    });
-
-    // Increment score if correct
-    if (isCorrect) {
-        score++;
-    }
-
-    // Wait 10 seconds, then move to the next question
-    setTimeout(() => {
-        currentQuestionIndex++;
-        answersContainer.innerHTML = ""; // Clear answers
-        displayQuestion();
-    }, 10000);
-}
-
-// Display Final Results
-function displayResults() {
+document.addEventListener("DOMContentLoaded", async () => {
     const triviaContainer = document.getElementById("triviaContainer");
-    const resultsContainer = document.getElementById("resultsContainer");
-
-    // Hide trivia container and show results
-    triviaContainer.style.display = "none";
-    resultsContainer.style.display = "block";
-
-    // Calculate percentage
-    const percentage = Math.round((score / totalQuestions) * 100);
-
-    // Display results
+    const questionElement = document.getElementById("question");
+    const answersElement = document.getElementById("answers");
     const resultsElement = document.getElementById("results");
-    resultsElement.innerHTML = `
-        <p>You answered ${score} out of ${totalQuestions} questions correctly.</p>
-        <p>Your score: ${percentage}%</p>
-        <h3>Correct Answers:</h3>
-        <ul>
-            ${triviaData
-                .map(
-                    (q, index) => `
-                <li>
-                    <strong>Q${index + 1}:</strong> ${decodeHTML(q.question)}
-                    <br>
-                    <strong>Answer:</strong> ${decodeHTML(q.correct_answer)}
-                </li>
-            `
-                )
-                .join("")}
-        </ul>
-    `;
-}
+    const backToTriviaButton = document.getElementById("backToTrivia");
 
-// Decode HTML entities (for special characters in trivia questions)
-function decodeHTML(html) {
-    const txt = document.createElement("textarea");
-    txt.innerHTML = html;
-    return txt.value;
-}
+    // Get query parameters from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const amount = urlParams.get("amount") || 10;
+    const category = urlParams.get("category");
+    const difficulty = urlParams.get("difficulty");
+    const type = urlParams.get("type");
 
-// Back to Trivia Menu
-document.getElementById("backToTrivia").addEventListener("click", () => {
-    window.location.href = "trivia.html";
-});
-
-// Start Trivia
-document.getElementById("triviaForm")?.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    // Build API URL
-    const baseUrl = "https://opentdb.com/api.php";
-    const questionCount = document.getElementById("questionCount").value || 10;
-    const category = document.getElementById("category").value;
-    const difficulty = document.getElementById("difficulty").value;
-    const type = document.getElementById("type").value;
-
-    let apiUrl = `${baseUrl}?amount=${questionCount}`;
+    // Construct API URL
+    let apiUrl = `https://opentdb.com/api.php?amount=${amount}`;
     if (category) apiUrl += `&category=${category}`;
     if (difficulty) apiUrl += `&difficulty=${difficulty}`;
     if (type) apiUrl += `&type=${type}`;
 
-    // Fetch trivia data
-    fetchTriviaData(apiUrl);
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let totalQuestions = 0;
+    let triviaData = [];
 
-    // Hide form and show trivia container
-    document.getElementById("triviaForm").style.display = "none";
-    document.getElementById("triviaContainer").style.display = "block";
+    // Fetch trivia questions
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        if (data.response_code === 0) {
+            triviaData = data.results;
+            totalQuestions = triviaData.length;
+            displayQuestion();
+        } else {
+            questionElement.textContent = "No trivia questions available. Please try again!";
+        }
+    } catch (error) {
+        questionElement.textContent = "Failed to fetch trivia questions. Please check your internet connection.";
+        console.error("Error fetching trivia:", error);
+    }
+
+    // Display a question
+    function displayQuestion() {
+        if (currentQuestionIndex >= totalQuestions) {
+            displayResults();
+            return;
+        }
+
+        const currentQuestion = triviaData[currentQuestionIndex];
+        questionElement.innerHTML = decodeHTML(currentQuestion.question);
+
+        // Display answers
+        answersElement.innerHTML = "";
+        const allAnswers = [...currentQuestion.incorrect_answers, currentQuestion.correct_answer];
+        shuffleArray(allAnswers).forEach((answer) => {
+            const li = document.createElement("li");
+            li.textContent = decodeHTML(answer);
+            li.addEventListener("click", () => handleAnswerClick(answer === currentQuestion.correct_answer));
+            answersElement.appendChild(li);
+        });
+    }
+
+    // Handle answer click
+    function handleAnswerClick(isCorrect) {
+        // Highlight the correct answer in green
+        Array.from(answersElement.children).forEach((li) => {
+            if (li.textContent === decodeHTML(triviaData[currentQuestionIndex].correct_answer)) {
+                li.style.backgroundColor = "green";
+                li.style.color = "white";
+            } else {
+                li.style.backgroundColor = "red";
+                li.style.color = "white";
+            }
+        });
+
+        // Update score
+        if (isCorrect) score++;
+
+        // Wait 2 seconds before moving to the next question
+        setTimeout(() => {
+            currentQuestionIndex++;
+            displayQuestion();
+        }, 2000);
+    }
+
+    // Display results
+    function displayResults() {
+        triviaContainer.classList.add("hidden");
+        resultsElement.classList.remove("hidden");
+        backToTriviaButton.classList.remove("hidden");
+
+        const percentage = ((score / totalQuestions) * 100).toFixed(2);
+
+        let resultsHTML = `<h2>Trivia Complete!</h2>`;
+        resultsHTML += `<p>Score: ${score} / ${totalQuestions}</p>`;
+        resultsHTML += `<p>Percentage: ${percentage}%</p>`;
+        resultsHTML += `<h3>Correct Answers:</h3><ul>`;
+
+        triviaData.forEach((question, index) => {
+            resultsHTML += `<li><strong>Q${index + 1}:</strong> ${decodeHTML(question.question)}<br><em>Answer:</em> ${decodeHTML(
+                question.correct_answer
+            )}</li>`;
+        });
+
+        resultsHTML += `</ul>`;
+        resultsElement.innerHTML = resultsHTML;
+    }
+
+    // Back to Trivia button functionality
+    backToTriviaButton.addEventListener("click", () => {
+        window.location.href = "trivia.html";
+    });
+
+    // Utility: Decode HTML entities
+    function decodeHTML(html) {
+        const txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
+    }
+
+    // Utility: Shuffle array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
 });
