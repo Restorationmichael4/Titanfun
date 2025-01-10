@@ -506,26 +506,6 @@ app.get("/api/fun/:category", async (req, res) => {
     }
 });
 
-
-// Routes for API features
-app.use('/api/google', require('./routes/google'));
-app.use('/api/spotify', require('./routes/spotify'));
-app.use('/api/wikipedia', require('./routes/wikipedia'));
-app.use('/api/playstore', require('./routes/playstore'));
-app.use('/api/happymod', require('./routes/happymod'));
-app.use('/api/apkmirror', require('./routes/apkmirror'));
-app.use('/api/sticker', require('./routes/sticker'));
-app.use('/api/youtube', require('./routes/youtube'));
-app.use('/api/googleimage', require('./routes/googleimage'));
-app.use('/api/tiktok', require('./routes/tiktok'));
-app.use('/api/wallpaper', require('./routes/wallpaper'));
-app.use('/api/wattpad', require('./routes/wattpad'));
-
-// Default route to serve search.html
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'search.html'));
-});
-
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
