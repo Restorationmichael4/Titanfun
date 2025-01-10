@@ -28,18 +28,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
     submitButton.addEventListener("click", () => {
         const answers = document.querySelectorAll(".answer");
+        const userSelections = {};
+
+        // Collect all user answers
         answers.forEach((answer) => {
-            const correct = answer.dataset.correct === "true";
-            if (correct && answer.checked) {
-                correctAnswers++;
-                answer.parentElement.classList.add("correct");
-            } else if (!correct && answer.checked) {
-                answer.parentElement.classList.add("incorrect");
+            if (answer.checked) {
+                const questionId = answer.name.split("-")[1];
+                userSelections[questionId] = answer.value;
             }
         });
 
+        const questionElements = document.querySelectorAll(".question");
+        correctAnswers = 0;
+
+        // Highlight answers and display correct ones
+        questionElements.forEach((questionElement) => {
+            const questionId = questionElement.dataset.id;
+            const correctAnswer = questionElement.dataset.correctAnswer;
+
+            const userAnswer = userSelections[questionId];
+
+            if (userAnswer === correctAnswer) {
+                correctAnswers++;
+                questionElement.classList.add("correct");
+            } else {
+                questionElement.classList.add("incorrect");
+            }
+
+            // Show the correct answer if the user was wrong or skipped
+            const correctAnswerElement = document.createElement("p");
+            correctAnswerElement.textContent = `Correct Answer: ${correctAnswer.toUpperCase()} (${questionElement.dataset.correctText})`;
+            correctAnswerElement.classList.add("correct-answer-highlight");
+            questionElement.appendChild(correctAnswerElement);
+        });
+
         resultsSection.classList.remove("hidden");
-        scoreDisplay.textContent = `You got ${correctAnswers} correct answers.`;
+        scoreDisplay.textContent = `You got ${correctAnswers} out of ${questionElements.length} correct.`;
     });
 
     async function fetchQuestions(subject, year, examType, numQuestions) {
@@ -60,6 +84,9 @@ document.addEventListener("DOMContentLoaded", () => {
         questions.forEach((q, index) => {
             const questionEl = document.createElement("div");
             questionEl.classList.add("question");
+            questionEl.dataset.id = q.id;
+            questionEl.dataset.correctAnswer = q.answer;
+            questionEl.dataset.correctText = q.option[q.answer];
 
             const questionText = document.createElement("p");
             questionText.textContent = `${index + 1}. ${q.question}`;
@@ -73,7 +100,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     input.name = `question-${q.id}`;
                     input.value = option;
                     input.classList.add("answer");
-                    input.dataset.correct = option === q.answer;
 
                     label.appendChild(input);
                     label.appendChild(document.createTextNode(q.option[option]));
