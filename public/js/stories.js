@@ -9,7 +9,7 @@ function fetchStories() {
             data.forEach(story => {
                 const listItem = document.createElement('li');
                 listItem.innerHTML = `
-                    <a href="story.html?id=${story.id}" class="story-title">
+                    <a href="story.html?id=${story._id}" class="story-title">
                         ${story.title}
                     </a>`;
                 storiesList.appendChild(listItem);
@@ -42,7 +42,7 @@ function fetchTrendingStories() {
             data.forEach(story => {
                 const listItem = document.createElement('li');
                 listItem.innerHTML = `
-                    <a href="story.html?id=${story.id}" class="trending-story">
+                    <a href="story.html?id=${story._id}" class="trending-story">
                         ${story.title} (Views: ${story.views})
                     </a>`;
                 trendingList.appendChild(listItem);
