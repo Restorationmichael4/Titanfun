@@ -5,6 +5,10 @@ const app = express();
 const bodyParser = require('body-parser');
 const port = 3000;
 const path = require("path");
+const bcrypt = require('bcrypt');
+const session = require('express-session');
+const BetterSQLite3 = require('better-sqlite3');
+const db = new BetterSQLite3('./database.db');
 
 app.use(express.json());
 app.use(express.static('public'));
