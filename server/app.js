@@ -162,99 +162,97 @@ async function getOrCreateFolder() {
     }
 }
 
-// API: Add a new story
-app.post('/api/stories', async (req, res) => {
-    const { title, content, category } = req.body;
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const app = express();
 
-    if (!title || !content || !category) {
-        return res.status(400).json({ error: 'All fields are required.' });
-    }
+// Middleware
+app.use(bodyParser.json());
 
-    try {
-        // Get or create the Google Drive folder
-        const folderId = await getOrCreateFolder();
+// MongoDB connection URI (replace with your credentials)
+const mongoURI = 'mongodb+srv://restorationmichael3:<db_password>@titanfun.ywexz.mongodb.net/?retryWrites=true&w=majority&appName=Titanfun';
 
-        // Upload story content to Google Drive
-        const fileMetadata = { name: `${title}.txt`, parents: [folderId] };
-        const media = { mimeType: 'text/plain', body: content };
+// Connect to MongoDB
+mongoose
+  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error('MongoDB connection error:', err));
 
-        const file = await drive.files.create({
-            resource: fileMetadata,
-            media: media,
-            fields: 'id',
-        });
-
-        const fileId = file.data.id;
-
-        // Save metadata to SQLite
-        const insert = db.prepare(
-            'INSERT INTO stories (title, category, drive_file_id) VALUES (?, ?, ?)'
-        );
-        insert.run(title, category, fileId);
-
-        res.status(201).json({ message: 'Story added successfully.', fileId });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error saving story.' });
-    }
+// Story Schema and Model
+const storySchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  content: { type: String, required: true },
+  category: { type: String, required: true },
+  views: { type: Number, default: 0 },
 });
 
-// API: Fetch all story titles
-app.get('/api/stories', (req, res) => {
-    try {
-        const stories = db.prepare('SELECT id, title, category FROM stories').all();
-        res.json(stories);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Error fetching stories.' });
-    }
+const Story = mongoose.model('Story', storySchema);
+
+// Routes
+
+// 1. Fetch all story titles
+app.get('/api/stories', async (req, res) => {
+  try {
+    const stories = await Story.find({}, { title: 1 });
+    res.json(stories);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching stories.' });
+  }
 });
 
-// API: Fetch a full story
+// 2. Fetch a full story and increment views
 app.get('/api/stories/:id', async (req, res) => {
-    const storyId = req.params.id;
+  const storyId = req.params.id;
 
-    try {
-        // Increment views in SQLite
-        db.prepare('UPDATE stories SET views = views + 1 WHERE id = ?').run(storyId);
+  try {
+    const story = await Story.findByIdAndUpdate(
+      storyId,
+      { $inc: { views: 1 } }, // Increment views
+      { new: true } // Return updated document
+    );
 
-        // Fetch metadata from SQLite
-        const story = db.prepare('SELECT * FROM stories WHERE id = ?').get(storyId);
-
-        if (!story) {
-            return res.status(404).json({ error: 'Story not found.' });
-        }
-
-        // Fetch full content from Google Drive
-        const file = await drive.files.get(
-            { fileId: story.drive_file_id, alt: 'media' },
-            { responseType: 'text' }
-        );
-
-        res.json({
-            id: story.id,
-            title: story.title,
-            category: story.category,
-            content: file.data,
-            views: story.views + 1, // Reflect updated views
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Error fetching the story.' });
+    if (!story) {
+      return res.status(404).json({ error: 'Story not found.' });
     }
+
+    res.json(story);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching the story.' });
+  }
 });
 
-// API: Fetch trending stories
-app.get('/api/stories/trending', (req, res) => {
-    try {
-        const trending = db.prepare(
-            'SELECT id, title, category, views FROM stories ORDER BY views DESC LIMIT 5'
-        ).all();
-        res.json(trending);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Error fetching trending stories.' });
-    }
+// 3. Submit a new story
+app.post('/api/stories', async (req, res) => {
+  const { title, content, category } = req.body;
+
+  if (!title || !content || !category) {
+    return res.status(400).json({ error: 'All fields are required.' });
+  }
+
+  try {
+    const newStory = new Story({ title, content, category });
+    await newStory.save();
+    res.status(201).json({ message: 'Story added successfully.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error saving story.' });
+  }
+});
+
+// 4. Fetch trending stories
+app.get('/api/stories/trending', async (req, res) => {
+  try {
+    const trending = await Story.find({}, { title: 1, views: 1 })
+      .sort({ views: -1 }) // Sort by views in descending order
+      .limit(5);
+    res.json(trending);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching trending stories.' });
+  }
 });
 
 // API route for comebacks
