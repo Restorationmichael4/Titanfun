@@ -2,7 +2,6 @@ const express = require('express');
 const fs = require('fs');
 const axios = require('axios');
 const app = express();
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const port = 3000;
 const path = require("path");
@@ -84,96 +83,6 @@ app.get('/api/dictionary', async (req, res) => {
         }
         res.status(500).json({ error: 'Error fetching data from the dictionary API.' });
     }
-});
-
-// Serve the JSON file
-app.get("/api/memes", (req, res) => {
-    res.sendFile(path.join(__dirname, "memes.json"));
-});
-
-// MongoDB connection URI (replace with your credentials)
-const mongoURI = 'mongodb+srv://restorationmichael3:samuel2010@titanfun.ywexz.mongodb.net/?retryWrites=true&w=majority&appName=Titanfun';
-
-// Connect to MongoDB
-mongoose
-  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch((err) => console.error('MongoDB connection error:', err));
-
-// Story Schema and Model
-const storySchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  content: { type: String, required: true },
-  category: { type: String, required: true },
-  views: { type: Number, default: 0 },
-});
-
-const Story = mongoose.model('Story', storySchema);
-
-// Routes
-
-// 1. Fetch all story titles
-app.get('/api/stories', async (req, res) => {
-  try {
-    const stories = await Story.find({}, { title: 1 });
-    res.json(stories);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error fetching stories.' });
-  }
-});
-
-// 2. Fetch a full story and increment views
-app.get('/api/stories/:id', async (req, res) => {
-  const storyId = req.params.id;
-
-  try {
-    const story = await Story.findByIdAndUpdate(
-      storyId,
-      { $inc: { views: 1 } }, // Increment views
-      { new: true } // Return updated document
-    );
-
-    if (!story) {
-      return res.status(404).json({ error: 'Story not found.' });
-    }
-
-    res.json(story);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error fetching the story.' });
-  }
-});
-
-// 3. Submit a new story
-app.post('/api/stories', async (req, res) => {
-  const { title, content, category } = req.body;
-
-  if (!title || !content || !category) {
-    return res.status(400).json({ error: 'All fields are required.' });
-  }
-
-  try {
-    const newStory = new Story({ title, content, category });
-    await newStory.save();
-    res.status(201).json({ message: 'Story added successfully.' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error saving story.' });
-  }
-});
-
-// 4. Fetch trending stories
-app.get('/api/stories/trending', async (req, res) => {
-  try {
-    const trending = await Story.find({}, { title: 1, views: 1 })
-      .sort({ views: -1 }) // Sort by views in descending order
-      .limit(5);
-    res.json(trending);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error fetching trending stories.' });
-  }
 });
 
 // API route for comebacks
