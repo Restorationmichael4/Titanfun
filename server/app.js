@@ -506,70 +506,24 @@ app.get("/api/fun/:category", async (req, res) => {
     }
 });
 
-const tempMailEndpoints = {
-    create: "https://api.giftedtech.web.id/api/tempmail/create?apikey=gifted",
-    check: "https://api.giftedtech.web.id/api/tempmail/check?apikey=gifted",
-    content: "https://api.giftedtech.web.id/api/tempmail/content?apikey=gifted",
-    delete: "https://api.giftedtech.web.id/api/tempmail/delete?apikey=gifted",
-};
 
-// Create Temporary Email
-app.get("/api/tempmail/create", async (req, res) => {
-    try {
-        const { data } = await axios.get(tempMailEndpoints.create);
-        res.json(data);
-    } catch (error) {
-        console.error("Error creating temporary email:", error.response?.data || error.message);
-        res.status(500).json({ error: "Failed to create temporary email." });
-    }
-});
+// Routes for API features
+app.use('/api/google', require('./routes/google'));
+app.use('/api/spotify', require('./routes/spotify'));
+app.use('/api/wikipedia', require('./routes/wikipedia'));
+app.use('/api/playstore', require('./routes/playstore'));
+app.use('/api/happymod', require('./routes/happymod'));
+app.use('/api/apkmirror', require('./routes/apkmirror'));
+app.use('/api/sticker', require('./routes/sticker'));
+app.use('/api/youtube', require('./routes/youtube'));
+app.use('/api/googleimage', require('./routes/googleimage'));
+app.use('/api/tiktok', require('./routes/tiktok'));
+app.use('/api/wallpaper', require('./routes/wallpaper'));
+app.use('/api/wattpad', require('./routes/wattpad'));
 
-// Check for New Mail
-app.get("/api/tempmail/check", async (req, res) => {
-    const { username, domain } = req.query;
-    if (!username || !domain) {
-        return res.status(400).json({ error: "Username and domain are required." });
-    }
-    const url = `${tempMailEndpoints.check}&username=${encodeURIComponent(username)}&domain=${encodeURIComponent(domain)}`;
-    try {
-        const { data } = await axios.get(url);
-        res.json(data);
-    } catch (error) {
-        console.error("Error checking temporary email:", error.response?.data || error.message);
-        res.status(500).json({ error: "Failed to check temporary email." });
-    }
-});
-
-// Get Email Content
-app.get("/api/tempmail/content", async (req, res) => {
-    const { username, domain, emailId } = req.query;
-    if (!username || !domain || !emailId) {
-        return res.status(400).json({ error: "Username, domain, and email ID are required." });
-    }
-    const url = `${tempMailEndpoints.content}&username=${encodeURIComponent(username)}&domain=${encodeURIComponent(domain)}&emailId=${encodeURIComponent(emailId)}`;
-    try {
-        const { data } = await axios.get(url);
-        res.json(data);
-    } catch (error) {
-        console.error("Error retrieving email content:", error.response?.data || error.message);
-        res.status(500).json({ error: "Failed to retrieve email content." });
-    }
-});
-
-// Delete Temporary Email
-app.get("/api/tempmail/delete", async (req, res) => {
-    const { username, domain } = req.query;
-    if (!username || !domain) {
-        return res.status(400).json({ error: "Username and domain are required." });
-    }
-    const url = `${tempMailEndpoints.delete}&username=${encodeURIComponent(username)}&domain=${encodeURIComponent(domain)}`;
-    try {
-        const { data } = await axios.get(url);
-        res.json(data);
-    } catch (error) {
-        console.error("Error deleting temporary email:", error.response?.data || error.message);
-        res.status(500).json({ error: "Failed to delete temporary email." });
-    }
+// Default route to serve search.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'search.html'));
 });
 
 // Start the server
