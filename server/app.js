@@ -144,6 +144,80 @@ app.post('/api/leaderboard', (req, res) => {
     }
 });
 
+// Ensure the users table exists
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL
+    )
+`).run();
+
+// Ensure the trivia_scores table exists
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS trivia_scores (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        score INTEGER NOT NULL,
+        date TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+`).run();
+
+// API route to handle user sign-up
+app.post('/api/signup', (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ success: false, message: 'All fields are required.' });
+    }
+
+    try {
+        db.prepare('INSERT INTO users (username, password) VALUES (?, ?)').run(username, password);
+        res.status(201).json({ success: true, message: 'User registered successfully.' });
+    } catch (error) {
+        console.error('Error signing up user:', error);
+        res.status(500).json({ success: false, message: 'Error during sign-up.' });
+    }
+});
+
+// API route to handle user login
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ success: false, message: 'All fields are required.' });
+    }
+
+    try {
+        const user = db.prepare('SELECT * FROM users WHERE username = ? AND password = ?').get(username, password);
+
+        if (user) {
+            res.status(200).json({ success: true, message: 'Login successful.' });
+        } else {
+            res.status(401).json({ success: false, message: 'Invalid credentials.' });
+        }
+    } catch (error) {
+        console.error('Error logging in user:', error);
+        res.status(500).json({ success: false, message: 'Error during login.' });
+    }
+});
+
+// API route to fetch user trivia scores
+app.get('/api/scores', (req, res) => {
+    const { username } = req.query;
+
+    if (!username) {
+        return res.status(400).json({ success: false, message: 'Username is required.' });
+    }
+
+    try {
+        const scores = db.prepare('SELECT score, date FROM trivia_scores WHERE username = ? ORDER BY date DESC').all(username);
+        res.status(200).json(scores);
+    } catch (error) {
+        console.error('Error fetching scores:', error);
+        res.status(500).json({ success: false, message: 'Error fetching scores.' });
+    }
+});
 
 // Load Horoscope Data
 const horoscopeData = JSON.parse(fs.readFileSync(path.join(__dirname, "horoscope.json"), "utf-8"));
