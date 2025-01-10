@@ -7,7 +7,6 @@ const bodyParser = require('body-parser');
 const port = 3000;
 const path = require("path");
 
-
 app.use(express.json());
 app.use(express.static('public'));
 app.use(bodyParser.json());
@@ -91,84 +90,6 @@ app.get('/api/dictionary', async (req, res) => {
 app.get("/api/memes", (req, res) => {
     res.sendFile(path.join(__dirname, "memes.json"));
 });
-
-// Initialize SQLite database
-const db = new BetterSQLite3('./server/database/stories.db');
-
-// Ensure the metadata table exists
-db.prepare(`
-    CREATE TABLE IF NOT EXISTS metadata (
-        key TEXT PRIMARY KEY,
-        value TEXT
-    )
-`).run();
-
-// Ensure the stories table exists
-db.prepare(`
-    CREATE TABLE IF NOT EXISTS stories (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
-        category TEXT,
-        drive_file_id TEXT,
-        views INTEGER DEFAULT 0
-    )
-`).run();
-
-// Google Drive setup
-const auth = new google.auth.GoogleAuth({
-    credentials: {
-        client_email: "titan-fun@fluted-elf-444710-u5.iam.gserviceaccount.com",
-        private_key: `-----BEGIN PRIVATE KEY-----
-MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4aqq6XoYjG5Ee...
------END PRIVATE KEY-----`,
-    },
-    scopes: ['https://www.googleapis.com/auth/drive'],
-});
-
-const drive = google.drive({ version: 'v3', auth });
-
-// Function to get or create a folder
-async function getOrCreateFolder() {
-    // Check if folder ID is already stored in SQLite
-    const folderRow = db.prepare("SELECT value FROM metadata WHERE key = 'drive_folder_id'").get();
-
-    if (folderRow) {
-        console.log('Using existing folder ID:', folderRow.value);
-        return folderRow.value;
-    }
-
-    // Create a new folder
-    const fileMetadata = {
-        name: 'TitanFunStories',
-        mimeType: 'application/vnd.google-apps.folder',
-    };
-
-    try {
-        const folder = await drive.files.create({
-            resource: fileMetadata,
-            fields: 'id',
-        });
-
-        const folderId = folder.data.id;
-
-        // Save folder ID in SQLite for future use
-        db.prepare("INSERT INTO metadata (key, value) VALUES ('drive_folder_id', ?)").run(folderId);
-
-        console.log('Created and saved new folder ID:', folderId);
-        return folderId;
-    } catch (err) {
-        console.error('Error creating folder:', err);
-        throw new Error('Could not create folder.');
-    }
-}
-
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const app = express();
-
-// Middleware
-app.use(bodyParser.json());
 
 // MongoDB connection URI (replace with your credentials)
 const mongoURI = 'mongodb+srv://restorationmichael3:<db_password>@titanfun.ywexz.mongodb.net/?retryWrites=true&w=majority&appName=Titanfun';
