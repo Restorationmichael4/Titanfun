@@ -101,7 +101,49 @@ app.post('/api/auth/logout', (req, res) => {
         res.status(200).json({ message: 'Logout successful!' });
     });
 });
-    
+
+// Ensure the leaderboard table exists
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS leaderboard (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        score INTEGER DEFAULT 0
+    )
+`).run();
+
+// API route to fetch leaderboard data
+app.get('/api/leaderboard', (req, res) => {
+    try {
+        const leaderboard = db.prepare('SELECT username, score FROM leaderboard ORDER BY score DESC LIMIT 10').all();
+        res.json(leaderboard);
+    } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
+// API route to update user score
+app.post('/api/leaderboard', (req, res) => {
+    const { username, score } = req.body;
+
+    if (!username || typeof score !== 'number') {
+        return res.status(400).json({ message: 'Invalid input.' });
+    }
+
+    try {
+        const existingUser = db.prepare('SELECT * FROM leaderboard WHERE username = ?').get(username);
+        if (existingUser) {
+            db.prepare('UPDATE leaderboard SET score = score + ? WHERE username = ?').run(score, username);
+        } else {
+            db.prepare('INSERT INTO leaderboard (username, score) VALUES (?, ?)').run(username, score);
+        }
+        res.status(200).json({ message: 'Score updated successfully!' });
+    } catch (error) {
+        console.error('Error updating leaderboard:', error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
 
 // Load Horoscope Data
 const horoscopeData = JSON.parse(fs.readFileSync(path.join(__dirname, "horoscope.json"), "utf-8"));
