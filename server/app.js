@@ -93,137 +93,77 @@ app.get("/api/memes", (req, res) => {
     res.sendFile(path.join(__dirname, "memes.json"));
 });
 
+// Initialize SQLite database
+const db = new BetterSQLite3('./server/database/stories.db');
+
+// Ensure the metadata table exists
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS metadata (
+        key TEXT PRIMARY KEY,
+        value TEXT
+    )
+`).run();
+
+// Ensure the stories table exists
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS stories (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        category TEXT,
+        drive_file_id TEXT,
+        views INTEGER DEFAULT 0
+    )
+`).run();
+
 // Google Drive setup
-const SCOPES = ['https://www.googleapis.com/auth/drive'];
 const auth = new google.auth.GoogleAuth({
     credentials: {
         client_email: "titan-fun@fluted-elf-444710-u5.iam.gserviceaccount.com",
         private_key: `-----BEGIN PRIVATE KEY-----
-MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4aqq6XoYjG5Ee
-CXbvNgyT05lK2cnv27XE2BUri2bWOJ65yql0/MtyjkIGsXvQ2wfjk0R7X7APh4R8
-5bRnuFH8j4MEs33JqtrX3PJ6JKsDzxJQ0GT6T43AKxe0E92So2kCCC6v3rdWaW3H
-Co/Pl33UjQ3I6ia35Iopb4AAnIHMV+BXCPeFhLp3H27TA5AZrRPALd8UiCJcZlhS
-VBapX7XIXoH+L+4jAkO5eZUBShVBTxdW0yQfNRiHNsULgsNUaahWQ+Bt1n+Y0p2F
-j/kAB3LNgEkTe9Y/HdQJhDJ8OEiNMhCzMUuYdIRWRnr8spysu1MN8juf9bmQGtN9
-zcxIJCGxAgMBAAECggEAOGkwhkfJwk15a3W7stqWqFVuq63JDpznkioC98nxkA/L
-xctPYKC/XvBTFBcQZ8fINv3iUdboVSfACDB/qcaBFb+UdUiubpTb0nIcne4/fa/G
-y3+jk8nn82N7IbN98JAZ2+xC07tN25nuYZdCfF67t9vZ3p55b4DyHlCkGAvHzIiC
-b1KP9Ijh54FTN4KtXys5kTgy17u1q4OrOviEQsbr9HS6GHVC84cLiJagT+HtaJg6
-2mA+wpYdVl8zRraVQ0V0T+Ol+/9NKEstyP6rGPW9UbgZh+i5jbvhTCPTagFr6bL3
-M9jPT+gZI7Q6PtHF3tEpFxI7QduijwB4t/3VWJcUHQKBgQD9ZZOyosj96Pp5oTEw
-xCq0dCkkABjLwHNh9lVpoL27tZJdzi2wLGLp0/gV5POe7ew3iXU3/9dvz98xblS3
-g+KiT0sxcGYHqICW5EDPuduva/bDgVVBGyqaMok3Vix/2SHd5q5LiLnmtu1hz+H4
-G/hoRaDVPw9mN28hDhkKp//hRwKBgQC6T6zT6IhyWAj07bU+3KV+O6M35QNMjmvb
-7hl6J4IbO3YNQ1aEzRt2QCUrt1Y6h6vSzrGW76Ibb4EIUe2YqBnsDHaIjo3JU7sB
-yb75Xag0BOyC8/PrCc3spRlnpQUoTEh6HyVrcqplsUJ4dtEeiXGcnUqxBJl++Sne
-O0P0aAmhRwKBgDylQ+0cAqiqStAzYPd/64yWxIXmNAkHvVWzxAtsuhwjv60NvGeO
-p/m4joaG7juaS8+a6WAGrkQHZy6IbmQhf2tDOQbTFMg+btAuPsi4fbiFSWDPIl1b
-qB2RfL+usyXCDNXz8MEJLxzlqPig7T8ZSqGCEJUY65GWMNWjbyDaxmXfAoGBAJNb
-z0twAPPHc5YdqRwGMpLsIoVkCj7z6pVx9g6qzvoxBoco+nZhL9ZQl9XC1V3HzvwW
-ZVoHQQVIJRtqiW0TkCUmGl6ZucVCB4g7hGQBUreKKXLN9t+wyoHgd36Fg9XCuBR3
-LAaXE/UIxZU4DOCFPynrMpdeFvXZpubRo0bdPrijAoGACwdDLN2+1BecT52kKdY/
-JjBiwgbDe8a6bM6zn/kECk0i59Pu0yZYZlQtvmvyMKKn6F1zHehqkINUVsPI/c3
-LTozSJOs5PwoKimOmo4gNcAzbP/MbsLpaPwCSnrPePO+sRG3d+qqaeVYAmrXFjzh
-YpPGmemG0PxLqz6SjvwOYuw=
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC4aqq6XoYjG5Ee...
 -----END PRIVATE KEY-----`,
     },
-    scopes: SCOPES,
+    scopes: ['https://www.googleapis.com/auth/drive'],
 });
+
 const drive = google.drive({ version: 'v3', auth });
 
-let titanFunFolderId = null;
-
-// Function to check or create the TitanFun Stories folder
+// Function to get or create a folder
 async function getOrCreateFolder() {
-    if (titanFunFolderId) return titanFunFolderId;
+    // Check if folder ID is already stored in SQLite
+    const folderRow = db.prepare("SELECT value FROM metadata WHERE key = 'drive_folder_id'").get();
+
+    if (folderRow) {
+        console.log('Using existing folder ID:', folderRow.value);
+        return folderRow.value;
+    }
+
+    // Create a new folder
+    const fileMetadata = {
+        name: 'TitanFunStories',
+        mimeType: 'application/vnd.google-apps.folder',
+    };
 
     try {
-        const searchResponse = await drive.files.list({
-            q: `mimeType='application/vnd.google-apps.folder' and name='TitanFun Stories'`,
-            fields: 'files(id, name)',
-        });
-
-        if (searchResponse.data.files.length > 0) {
-            titanFunFolderId = searchResponse.data.files[0].id;
-            console.log('Folder exists with ID:', titanFunFolderId);
-            return titanFunFolderId;
-        }
-
-        const createResponse = await drive.files.create({
-            requestBody: {
-                name: 'TitanFun Stories',
-                mimeType: 'application/vnd.google-apps.folder',
-            },
+        const folder = await drive.files.create({
+            resource: fileMetadata,
             fields: 'id',
         });
 
-        titanFunFolderId = createResponse.data.id;
-        console.log('Folder created with ID:', titanFunFolderId);
-        return titanFunFolderId;
-    } catch (error) {
-        console.error('Error creating or retrieving folder:', error);
-        throw error;
+        const folderId = folder.data.id;
+
+        // Save folder ID in SQLite for future use
+        db.prepare("INSERT INTO metadata (key, value) VALUES ('drive_folder_id', ?)").run(folderId);
+
+        console.log('Created and saved new folder ID:', folderId);
+        return folderId;
+    } catch (err) {
+        console.error('Error creating folder:', err);
+        throw new Error('Could not create folder.');
     }
 }
 
-// Fetch all stories (titles only)
-app.get('/api/stories', async (req, res) => {
-    try {
-        const folderId = await getOrCreateFolder();
-
-        const filesResponse = await drive.files.list({
-            q: `'${folderId}' in parents and mimeType='application/json'`,
-            fields: 'files(id, name)',
-        });
-
-        const stories = filesResponse.data.files.map(file => ({
-            id: file.id,
-            title: file.name.replace('.json', ''), // Remove the .json extension
-        }));
-
-        res.json(stories);
-    } catch (err) {
-        console.error('Error fetching stories:', err);
-        res.status(500).json({ error: 'Error fetching stories.' });
-    }
-});
-
-// Fetch a full story and increment views
-app.get('/api/stories/:id', async (req, res) => {
-    const storyId = req.params.id;
-
-    try {
-        const fileResponse = await drive.files.get({
-            fileId: storyId,
-            alt: 'media',
-        });
-
-        const story = JSON.parse(fileResponse.data);
-
-        if (!story) {
-            return res.status(404).json({ error: 'Story not found.' });
-        }
-
-        // Increment the views count
-        story.views = (story.views || 0) + 1;
-
-        // Update the story on Google Drive
-        await drive.files.update({
-            fileId: storyId,
-            media: {
-                mimeType: 'application/json',
-                body: JSON.stringify(story),
-            },
-        });
-
-        res.json(story);
-    } catch (err) {
-        console.error('Error fetching the story:', err);
-        res.status(500).json({ error: 'Error fetching the story.' });
-    }
-});
-
-// Submit a new story
+// API: Add a new story
 app.post('/api/stories', async (req, res) => {
     const { title, content, category } = req.body;
 
@@ -232,63 +172,88 @@ app.post('/api/stories', async (req, res) => {
     }
 
     try {
+        // Get or create the Google Drive folder
         const folderId = await getOrCreateFolder();
 
-        const story = {
-            title,
-            content,
-            category,
-            views: 0,
-        };
+        // Upload story content to Google Drive
+        const fileMetadata = { name: `${title}.txt`, parents: [folderId] };
+        const media = { mimeType: 'text/plain', body: content };
 
-        // Create a new JSON file on Google Drive
-        const createResponse = await drive.files.create({
-            requestBody: {
-                name: `${title}.json`,
-                parents: [folderId],
-                mimeType: 'application/json',
-            },
-            media: {
-                mimeType: 'application/json',
-                body: JSON.stringify(story),
-            },
+        const file = await drive.files.create({
+            resource: fileMetadata,
+            media: media,
+            fields: 'id',
         });
 
-        res.status(201).json({ message: 'Story added successfully.', storyId: createResponse.data.id });
-    } catch (err) {
-        console.error('Error saving story:', err);
+        const fileId = file.data.id;
+
+        // Save metadata to SQLite
+        const insert = db.prepare(
+            'INSERT INTO stories (title, category, drive_file_id) VALUES (?, ?, ?)'
+        );
+        insert.run(title, category, fileId);
+
+        res.status(201).json({ message: 'Story added successfully.', fileId });
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ error: 'Error saving story.' });
     }
 });
 
-// Fetch trending stories
-app.get('/api/stories/trending', async (req, res) => {
+// API: Fetch all story titles
+app.get('/api/stories', (req, res) => {
     try {
-        const folderId = await getOrCreateFolder();
+        const stories = db.prepare('SELECT id, title, category FROM stories').all();
+        res.json(stories);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error fetching stories.' });
+    }
+});
 
-        const filesResponse = await drive.files.list({
-            q: `'${folderId}' in parents and mimeType='application/json'`,
-            fields: 'files(id, name)',
+// API: Fetch a full story
+app.get('/api/stories/:id', async (req, res) => {
+    const storyId = req.params.id;
+
+    try {
+        // Increment views in SQLite
+        db.prepare('UPDATE stories SET views = views + 1 WHERE id = ?').run(storyId);
+
+        // Fetch metadata from SQLite
+        const story = db.prepare('SELECT * FROM stories WHERE id = ?').get(storyId);
+
+        if (!story) {
+            return res.status(404).json({ error: 'Story not found.' });
+        }
+
+        // Fetch full content from Google Drive
+        const file = await drive.files.get(
+            { fileId: story.drive_file_id, alt: 'media' },
+            { responseType: 'text' }
+        );
+
+        res.json({
+            id: story.id,
+            title: story.title,
+            category: story.category,
+            content: file.data,
+            views: story.views + 1, // Reflect updated views
         });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error fetching the story.' });
+    }
+});
 
-        const storiesPromises = filesResponse.data.files.map(async file => {
-            const fileResponse = await drive.files.get({
-                fileId: file.id,
-                alt: 'media',
-            });
-            const story = JSON.parse(fileResponse.data);
-            return { id: file.id, title: story.title, views: story.views || 0 };
-        });
-
-        const stories = await Promise.all(storiesPromises);
-
-        const trending = stories
-            .sort((a, b) => b.views - a.views) // Sort by views (descending)
-            .slice(0, 5); // Take top 5
-
+// API: Fetch trending stories
+app.get('/api/stories/trending', (req, res) => {
+    try {
+        const trending = db.prepare(
+            'SELECT id, title, category, views FROM stories ORDER BY views DESC LIMIT 5'
+        ).all();
         res.json(trending);
     } catch (err) {
-        console.error('Error fetching trending stories:', err);
+        console.error(err);
         res.status(500).json({ error: 'Error fetching trending stories.' });
     }
 });
