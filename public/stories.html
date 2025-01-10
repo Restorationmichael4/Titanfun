@@ -16,10 +16,33 @@
         <!-- Submit a Story -->
         <section class="mb-8">
             <h2 class="text-2xl font-bold mb-4">Submit Your Story</h2>
-            <form id="story-form" class="bg-gray-900 p-4 rounded shadow-md">
-                <input type="text" id="story-title-input" class="w-full p-2 mb-4 bg-gray-800 text-white rounded" placeholder="Title" required>
-                <textarea id="story-content-input" class="w-full p-2 mb-4 bg-gray-800 text-white rounded" placeholder="Content" required></textarea>
-                <input type="text" id="story-category-input" class="w-full p-2 mb-4 bg-gray-800 text-white rounded" placeholder="Category" required>
+            <form id="story-form" class="bg-gray-900 p-4 rounded shadow-md" novalidate>
+                <label for="story-title-input" class="sr-only">Title</label>
+                <input 
+                    type="text" 
+                    id="story-title-input" 
+                    class="w-full p-2 mb-4 bg-gray-800 text-white rounded" 
+                    placeholder="Title" 
+                    required 
+                    aria-label="Story Title">
+                    
+                <label for="story-content-input" class="sr-only">Content</label>
+                <textarea 
+                    id="story-content-input" 
+                    class="w-full p-2 mb-4 bg-gray-800 text-white rounded" 
+                    placeholder="Content" 
+                    required 
+                    aria-label="Story Content"></textarea>
+                    
+                <label for="story-category-input" class="sr-only">Category</label>
+                <input 
+                    type="text" 
+                    id="story-category-input" 
+                    class="w-full p-2 mb-4 bg-gray-800 text-white rounded" 
+                    placeholder="Category" 
+                    required 
+                    aria-label="Story Category">
+                    
                 <button type="submit" class="bg-gold text-black px-4 py-2 rounded font-bold">Submit</button>
             </form>
         </section>
@@ -27,7 +50,7 @@
         <!-- List of Stories -->
         <section>
             <h2 class="text-2xl font-bold mb-4">Stories</h2>
-            <ul id="stories-list" class="list-disc list-inside bg-gray-900 p-4 rounded shadow-md">
+            <ul id="stories-list" class="list-disc list-inside bg-gray-900 p-4 rounded shadow-md" role="list">
                 <!-- Stories will be dynamically inserted here -->
             </ul>
         </section>
@@ -35,7 +58,7 @@
         <!-- Trending Stories -->
         <section class="mt-8">
             <h2 class="text-2xl font-bold mb-4">Trending Stories</h2>
-            <ul id="trending-list" class="list-disc list-inside bg-gray-900 p-4 rounded shadow-md">
+            <ul id="trending-list" class="list-disc list-inside bg-gray-900 p-4 rounded shadow-md" role="list">
                 <!-- Trending stories will be dynamically inserted here -->
             </ul>
         </section>
@@ -54,4 +77,4 @@
     <!-- Scripts -->
     <script src="js/stories.js"></script>
 </body>
-</html>
+                    </html>
