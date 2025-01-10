@@ -92,7 +92,7 @@ app.get("/api/memes", (req, res) => {
 });
 
 // MongoDB connection URI (replace with your credentials)
-const mongoURI = 'mongodb+srv://restorationmichael3:<db_password>@titanfun.ywexz.mongodb.net/?retryWrites=true&w=majority&appName=Titanfun';
+const mongoURI = 'mongodb+srv://restorationmichael3:samuel2010@titanfun.ywexz.mongodb.net/?retryWrites=true&w=majority&appName=Titanfun';
 
 // Connect to MongoDB
 mongoose
