@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Practice</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #3498db;
+            color: white;
+            text-align: center;
+            padding: 2em 0;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+             padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        select, input[type="number"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #27ae60;
+        }
+
+        .start-button {
+             background-color: #3498db;
+        }
+
+        .start-button:hover {
+           background-color: #2980b9;
+        }
+
+
+
+        #exam-questions, #results {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #questions-container {
+            margin-bottom: 20px;
+        }
+
+        #questions-container .question {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        #questions-container .options {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+              #questions-container .options label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        #submit-answers{
+            margin-top: 20px;
+            display: block;
+             margin-left: auto;
+             margin-right: auto;
+        }
+         #results h2 {
+            color: #27ae60;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Exam Practice</h1>
+        <p>Select your subject, year, exam type, and number of questions to start practicing.</p>
+    </header>
+
+    <main>
+        <form id="exam-settings">
+            <div class="form-group">
+                <label for="subject">Subject:</label>
+                <select id="subject">
+                    <option value="english">English</option>
+                    <option value="mathematics">Mathematics</option>
+                    <option value="commerce">Commerce</option>
+                    <option value="accounting">Accounting</option>
+                    <option value="biology">Biology</option>
+                    <option value="physics">Physics</option>
+                    <option value="chemistry">Chemistry</option>
+                     <option value="englishlit">English Literature</option>
+                    <option value="government">Government</option>
+                    <option value="crk">CRK</option>
+                    <option value="geography">Geography</option>
+                    <option value="economics">Economics</option>
+                    <option value="irk">IRK</option>
+                    <option value="civiledu">Civic Education</option>
+                     <option value="insurance">Insurance</option>
+                      <option value="currentaffairs">Current Affairs</option>
+                      <option value="history">History</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="year">Year:</label>
+                <select id="year">
+                    <option value="2001">2001</option>
+                    <option value="2002">2002</option>
+                    <option value="2003">2003</option>
+                    <option value="2004">2004</option>
+                    <option value="2005">2005</option>
+                    <option value="2006">2006</option>
+                    <option value="2007">2007</option>
+                    <option value="2008">2008</option>
+                    <option value="2009">2009</option>
+                    <option value="2010">2010</option>
+                    <option value="2011">2011</option>
+                    <option value="2012">2012</option>
+                     <option value="2013">2013</option>
+                </select>
+            </div>
+
+             <div class="form-group">
+                <label for="exam-type">Exam Type:</label>
+                <select id="exam-type">
+                    <option value="utme">UTME</option>
+                    <option value="wassce">WASSCE</option>
+                    <option value="post-utme">Post-UTME</option>
+                    <option value="aloc-games">ALOC GAMES</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="num-questions">Number of Questions (max 40):</label>
+                <input type="number" id="num-questions" min="1" max="40" value="10">
+            </div>
+
+            <button type="submit" class="start-button">Start Exam</button>
+        </form>
+
+        <section id="exam-questions" class="hidden">
+            <div id="questions-container"></div>
+            <button id="submit-answers" class="hidden">Submit Answers</button>
+        </section>
+
+        <section id="results" class="hidden">
+            <h2>Your Results</h2>
+            <p id="score"></p>
+        </section>
+    </main>
+
+    <script src="exam.js"></script>
+</body>
+</html>
