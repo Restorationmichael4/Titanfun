@@ -13,6 +13,95 @@ const db = new BetterSQLite3('./database.db');
 app.use(express.json());
 app.use(express.static('public'));
 app.use(bodyParser.json());
+app.use(session({
+    secret: 'b6aa9d53f50f1d5c69a85c930c9d7cbd270111fb142ba471a75110ec064a94ea4ae6705d9df95475e15a7eecfb4c2c4f6a04583d25d5d83dc0ec2c0d28bc57e1', // Replace with a secure secret key
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Set to true if using HTTPS
+}));
+
+// Ensure users table exists
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL
+    )
+`).run();
+
+// Signup Route
+app.post('/api/auth/signup', async (req, res) => {
+    const { username, email, password } = req.body;
+
+    if (!username || !email || !password) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    try {
+        // Check if email is already registered
+        const existingUser = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+        if (existingUser) {
+            return res.status(400).json({ message: 'Email already registered.' });
+        }
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Insert the new user
+        db.prepare('INSERT INTO users (username, email, password) VALUES (?, ?, ?)')
+            .run(username, email, hashedPassword);
+
+        res.status(201).json({ message: 'Signup successful!' });
+    } catch (error) {
+        console.error('Error during signup:', error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
+// Login Route
+app.post('/api/auth/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    try {
+        // Fetch the user
+        const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid email or password.' });
+        }
+
+        // Compare passwords
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (!isPasswordCorrect) {
+            return res.status(401).json({ message: 'Invalid email or password.' });
+        }
+
+        // Save user info in session
+        req.session.userId = user.id;
+        req.session.username = user.username;
+
+        res.status(200).json({ message: 'Login successful!' });
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({ message: 'Internal server error.' });
+    }
+});
+
+// Logout Route
+app.post('/api/auth/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Error logging out:', err);
+            return res.status(500).json({ message: 'Logout failed.' });
+        }
+        res.status(200).json({ message: 'Logout successful!' });
+    });
+});
+    
 
 // Load Horoscope Data
 const horoscopeData = JSON.parse(fs.readFileSync(path.join(__dirname, "horoscope.json"), "utf-8"));
