@@ -1,0 +1,22 @@
+-- Create the users table (if it doesn't exist)
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
+);
+
+-- Create the leaderboard table (if it doesn't exist)
+CREATE TABLE IF NOT EXISTS leaderboard (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    score INTEGER DEFAULT 0
+);
+
+-- Create the trivia_scores table (if it doesn't exist)
+CREATE TABLE IF NOT EXISTS trivia_scores (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    score INTEGER NOT NULL,
+    date TEXT DEFAULT CURRENT_TIMESTAMP
+);
