@@ -1,32 +1,54 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const axios = require('axios');
-const app = express();
 const bodyParser = require('body-parser');
-const port = 3000;
-const path = require("path");
-const bcrypt = require('bcryptjs');
 const session = require('express-session');
+const bcrypt = require('bcryptjs');
 const BetterSQLite3 = require('better-sqlite3');
-const db = new BetterSQLite3('./database.db');
 
+const app = express();
+const port = 3000;
+
+// Initialize SQLite Database
+const dbPath = path.resolve(__dirname, './database.db');
+const db = new BetterSQLite3(dbPath);
+
+// Middleware
 app.use(express.json());
 app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(session({
-    secret: 'b6aa9d53f50f1d5c69a85c930c9d7cbd270111fb142ba471a75110ec064a94ea4ae6705d9df95475e15a7eecfb4c2c4f6a04583d25d5d83dc0ec2c0d28bc57e1', // Replace with a secure secret key
+    secret: 'b6aa9d53f50f1d5c69a85c930c9d7cbd270111fb142ba471a75110ec064a94ea4ae6705d9df95475e15a7eecfb4c2c4f6a04583d25d5d83dc0ec2c0d28bc57e1',
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }, // Set to true if using HTTPS
+    cookie: { secure: false }, // Set to true for HTTPS
 }));
 
-// Ensure users table exists
+// Ensure Tables Exist
 db.prepare(`
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL,
+        username TEXT UNIQUE NOT NULL,
         email TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL
+    )
+`).run();
+
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS leaderboard (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        score INTEGER DEFAULT 0
+    )
+`).run();
+
+db.prepare(`
+    CREATE TABLE IF NOT EXISTS trivia_scores (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
+        score INTEGER NOT NULL,
+        date TEXT DEFAULT CURRENT_TIMESTAMP
     )
 `).run();
 
@@ -39,16 +61,13 @@ app.post('/api/auth/signup', async (req, res) => {
     }
 
     try {
-        // Check if email is already registered
         const existingUser = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
         if (existingUser) {
             return res.status(400).json({ message: 'Email already registered.' });
         }
 
-        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Insert the new user
         db.prepare('INSERT INTO users (username, email, password) VALUES (?, ?, ?)')
             .run(username, email, hashedPassword);
 
@@ -68,19 +87,16 @@ app.post('/api/auth/login', async (req, res) => {
     }
 
     try {
-        // Fetch the user
         const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
         if (!user) {
             return res.status(401).json({ message: 'Invalid email or password.' });
         }
 
-        // Compare passwords
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (!isPasswordCorrect) {
             return res.status(401).json({ message: 'Invalid email or password.' });
         }
 
-        // Save user info in session
         req.session.userId = user.id;
         req.session.username = user.username;
 
@@ -102,16 +118,7 @@ app.post('/api/auth/logout', (req, res) => {
     });
 });
 
-// Ensure the leaderboard table exists
-db.prepare(`
-    CREATE TABLE IF NOT EXISTS leaderboard (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL,
-        score INTEGER DEFAULT 0
-    )
-`).run();
-
-// API route to fetch leaderboard data
+// Leaderboard Routes
 app.get('/api/leaderboard', (req, res) => {
     try {
         const leaderboard = db.prepare('SELECT username, score FROM leaderboard ORDER BY score DESC LIMIT 10').all();
@@ -122,7 +129,6 @@ app.get('/api/leaderboard', (req, res) => {
     }
 });
 
-// API route to update user score
 app.post('/api/leaderboard', (req, res) => {
     const { username, score } = req.body;
 
@@ -144,65 +150,23 @@ app.post('/api/leaderboard', (req, res) => {
     }
 });
 
-// Ensure the users table exists
-db.prepare(`
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL
-    )
-`).run();
+// Trivia Scores Routes
+app.post('/api/scores', (req, res) => {
+    const { username, score } = req.body;
 
-// Ensure the trivia_scores table exists
-db.prepare(`
-    CREATE TABLE IF NOT EXISTS trivia_scores (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT NOT NULL,
-        score INTEGER NOT NULL,
-        date TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-`).run();
-
-// API route to handle user sign-up
-app.post('/api/signup', (req, res) => {
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-        return res.status(400).json({ success: false, message: 'All fields are required.' });
+    if (!username || typeof score !== 'number') {
+        return res.status(400).json({ success: false, message: 'Invalid input.' });
     }
 
     try {
-        db.prepare('INSERT INTO users (username, password) VALUES (?, ?)').run(username, password);
-        res.status(201).json({ success: true, message: 'User registered successfully.' });
+        db.prepare('INSERT INTO trivia_scores (username, score) VALUES (?, ?)').run(username, score);
+        res.status(201).json({ success: true, message: 'Score saved successfully.' });
     } catch (error) {
-        console.error('Error signing up user:', error);
-        res.status(500).json({ success: false, message: 'Error during sign-up.' });
+        console.error('Error saving score:', error);
+        res.status(500).json({ success: false, message: 'Internal server error.' });
     }
 });
 
-// API route to handle user login
-app.post('/api/login', (req, res) => {
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-        return res.status(400).json({ success: false, message: 'All fields are required.' });
-    }
-
-    try {
-        const user = db.prepare('SELECT * FROM users WHERE username = ? AND password = ?').get(username, password);
-
-        if (user) {
-            res.status(200).json({ success: true, message: 'Login successful.' });
-        } else {
-            res.status(401).json({ success: false, message: 'Invalid credentials.' });
-        }
-    } catch (error) {
-        console.error('Error logging in user:', error);
-        res.status(500).json({ success: false, message: 'Error during login.' });
-    }
-});
-
-// API route to fetch user trivia scores
 app.get('/api/scores', (req, res) => {
     const { username } = req.query;
 
@@ -215,7 +179,7 @@ app.get('/api/scores', (req, res) => {
         res.status(200).json(scores);
     } catch (error) {
         console.error('Error fetching scores:', error);
-        res.status(500).json({ success: false, message: 'Error fetching scores.' });
+        res.status(500).json({ success: false, message: 'Internal server error.' });
     }
 });
 
