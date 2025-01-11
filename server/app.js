@@ -218,6 +218,55 @@ app.post("/api/horoscope", (req, res) => {
     }
 });
 
+let oracleInstance; 
+
+app.post('/start', async (req, res) => {
+  try {
+    const region = req.body.region || 'en';
+    const childMode = req.body.childMode || false; 
+    oracleInstance = new Aki({ region, childMode }); 
+    await oracleInstance.start();
+    res.json({ question: oracleInstance.question, answers: oracleInstance.answers });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to start The Oracle' });
+  }
+});
+
+app.post('/step', async (req, res) => {
+  try {
+    const answerIndex = req.body.answerIndex;
+    await oracleInstance.step(answerIndex);
+    res.json({ 
+      question: oracleInstance.question, 
+      answers: oracleInstance.answers, 
+      progress: oracleInstance.progress 
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to process step' });
+  }
+});
+
+app.post('/guess', async (req, res) => {
+  try {
+    const guessOrResponse = await oracleInstance.answer();
+    res.json({ guessOrResponse }); 
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to get guess' });
+  }
+});
+
+app.post('/continue', async (req, res) => {
+  try {
+    await oracleInstance.continue();
+    res.json({ message: 'Continued' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to continue' });
+  }
+});
 
 // API route for pick-up lines
 app.get('/api/pickup-line', (req, res) => {
