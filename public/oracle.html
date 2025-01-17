@@ -1,25 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>The Oracle</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-    }
-
-    #answerButtons {
-      display: none; 
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oracle</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <h1>Consult The Oracle</h1>
-  <p id="question"></p>
-  <div id="answerButtons"></div>
-  <button id="startButton">Start</button>
-  <button id="guessButton" disabled>Guess</button>
-  <p id="result"></p>
-  <script src="js/oracle.js"></script> 
+    <header>
+        <h1>Oracle</h1>
+    </header>
+    <main>
+        <div id="game-container">
+            <p id="question"></p>
+            <div id="answers"></div>
+        </div>
+        <button id="start-button">Start Game</button>
+    </main>
+    <footer>
+        <p>&copy; 2025 Oracle</p>
+    </footer>
+    <script src="js/oracle.js"></script>
 </body>
 </html>
