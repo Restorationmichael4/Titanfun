@@ -1,69 +1,81 @@
-const startButton = document.getElementById('startButton');
-const answerButtonsContainer = document.getElementById('answerButtons');
-const guessButton = document.getElementById('guessButton');
-const continueButton = document.getElementById('continueButton');
+let sessionId = null;
+
+const startButton = document.getElementById('start-button');
+const questionContainer = document.getElementById('game-container');
 const questionElement = document.getElementById('question');
-const resultElement = document.getElementById('result');
+const answersContainer = document.getElementById('answers');
 
-startButton.addEventListener('click', async () => {
-  try {
-    const response = await fetch('/start', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-    });
-    const data = await response.json();
+// Function to start the game
+async function startGame() {
+    try {
+        const response = await fetch('/api/oracle/start', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ region: 'en' }) // Default to English
+        });
 
-    questionElement.textContent = data.question;
-    answerButtonsContainer.innerHTML = ''; 
+        const data = await response.json();
+        sessionId = data.sessionId;
 
-    data.answers.forEach((answer, index) => {
-      const button = document.createElement('button');
-      button.textContent = answer;
-      button.addEventListener('click', () => handleAnswer(index));
-      answerButtonsContainer.appendChild(button);
-    });
-
-    startButton.disabled = true;
-    answerButtonsContainer.style.display = 'block'; 
-  } catch (error) {
-    console.error('Error starting The Oracle:', error);
-  }
-});
-
-const handleAnswer = async (answerIndex) => {
-  try {
-    const response = await fetch('/step', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ answerIndex })
-    });
-    const data = await response.json();
-
-    questionElement.textContent = data.question;
-    answerButtonsContainer.innerHTML = ''; 
-
-    data.answers.forEach((answer, index) => {
-      const button = document.createElement('button');
-      button.textContent = answer;
-      button.addEventListener('click', () => handleAnswer(index));
-      answerButtonsContainer.appendChild(button);
-    });
-
-    if (data.progress >= 90) { 
-      answerButtonsContainer.style.display = 'none'; 
-      guessButton.disabled = false;
+        displayQuestion(data.question, data.answers);
+    } catch (error) {
+        console.error('Error starting game:', error);
     }
-  } catch (error) {
-    console.error('Error processing step:', error);
-  }
-};
+}
 
-guessButton.addEventListener('click', async () => {
-  try {
-    const response = await fetch('/guess', {
-      method: 'POST',
+// Function to display a question and possible answers
+function displayQuestion(question, answers) {
+    questionElement.textContent = question;
+    answersContainer.innerHTML = '';
+
+    answers.forEach((answer, index) => {
+        const button = document.createElement('button');
+        button.textContent = answer;
+        button.onclick = () => submitAnswer(index);
+        answersContainer.appendChild(button);
     });
-    const data = await response.json();
+}
 
-    if (data.guessOrResponse.type === 'guess') {
-      resultElement.textContent = `The Oracle thinks it's: ${data.guessOrResponse.
+// Function to submit an answer
+async function submitAnswer(answerIndex) {
+    try {
+        const response = await fetch('/api/oracle/answer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionId, answer: answerIndex })
+        });
+
+        const data = await response.json();
+
+        if (data.guessReady) {
+            showGuess();
+        } else {
+            displayQuestion(data.question, data.answers);
+        }
+    } catch (error) {
+        console.error('Error submitting answer:', error);
+    }
+}
+
+// Function to show Akinator's guess
+async function showGuess() {
+    try {
+        const response = await fetch('/api/oracle/guess', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ sessionId })
+        });
+
+        const data = await response.json();
+        questionElement.textContent = `The Oracle's Guess: ${data.name}`;
+        answersContainer.innerHTML = `
+            <p>${data.description}</p>
+            <img src="${data.image}" alt="${data.name}">
+        `;
+    } catch (error) {
+        console.error('Error showing guess:', error);
+    }
+}
+
+// Event listener to start the game
+startButton.addEventListener('click', startGame);
