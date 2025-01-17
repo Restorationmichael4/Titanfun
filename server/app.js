@@ -218,55 +218,93 @@ app.post("/api/horoscope", (req, res) => {
     }
 });
 
-let oracleInstance; 
+// Store Akinator sessions in memory
+let sessions = {};
 
-app.post('/start', async (req, res) => {
-  try {
-    const region = req.body.region || 'en';
-    const childMode = req.body.childMode || false; 
-    oracleInstance = new Aki({ region, childMode }); 
-    await oracleInstance.start();
-    res.json({ question: oracleInstance.question, answers: oracleInstance.answers });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to start The Oracle' });
-  }
+// Route to start a new Akinator game
+app.post('/api/oracle/start', async (req, res) => {
+    const { region = 'en', childMode = false } = req.body; // Default to English region
+
+    try {
+        const aki = new Aki({ region, childMode });
+        await aki.start();
+
+        // Save the session by a unique session ID
+        const sessionId = new Date().getTime().toString();
+        sessions[sessionId] = aki;
+
+        res.status(200).json({
+            sessionId,
+            question: aki.question,
+            answers: aki.answers,
+            progress: aki.progress
+        });
+    } catch (error) {
+        console.error('Error starting Oracle session:', error);
+        res.status(500).json({ error: 'Unable to start Oracle session.' });
+    }
 });
 
-app.post('/step', async (req, res) => {
-  try {
-    const answerIndex = req.body.answerIndex;
-    await oracleInstance.step(answerIndex);
-    res.json({ 
-      question: oracleInstance.question, 
-      answers: oracleInstance.answers, 
-      progress: oracleInstance.progress 
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to process step' });
-  }
+// Route to submit an answer to the current question
+app.post('/api/oracle/answer', async (req, res) => {
+    const { sessionId, answer } = req.body;
+
+    if (!sessions[sessionId]) {
+        return res.status(400).json({ error: 'Session not found. Please start a new game.' });
+    }
+
+    try {
+        const aki = sessions[sessionId];
+        await aki.step(answer);
+
+        if (aki.progress >= 95) {
+            // Akinator is ready to make a guess
+            return res.status(200).json({
+                question: null,
+                answers: null,
+                progress: aki.progress,
+                guessReady: true
+            });
+        }
+
+        res.status(200).json({
+            question: aki.question,
+            answers: aki.answers,
+            progress: aki.progress,
+            guessReady: false
+        });
+    } catch (error) {
+        console.error('Error processing answer:', error);
+        res.status(500).json({ error: 'Unable to process the answer.' });
+    }
 });
 
-app.post('/guess', async (req, res) => {
-  try {
-    const guessOrResponse = await oracleInstance.answer();
-    res.json({ guessOrResponse }); 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to get guess' });
-  }
+// Route to display Akinator's guess
+app.post('/api/oracle/guess', async (req, res) => {
+    const { sessionId } = req.body;
+
+    if (!sessions[sessionId]) {
+        return res.status(400).json({ error: 'Session not found. Please start a new game.' });
+    }
+
+    try {
+        const aki = sessions[sessionId];
+        const guess = await aki.answer();
+
+        res.status(200).json({
+            name: guess.answers[0].name,
+            description: guess.answers[0].description,
+            image: guess.answers[0].absolute_picture_path
+        });
+
+        // Clean up session
+        delete sessions[sessionId];
+    } catch (error) {
+        console.error('Error making a guess:', error);
+        res.status(500).json({ error: 'Unable to make a guess.' });
+    }
 });
 
-app.post('/continue', async (req, res) => {
-  try {
-    await oracleInstance.continue();
-    res.json({ message: 'Continued' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to continue' });
-  }
-});
 
 // API route for pick-up lines
 app.get('/api/pickup-line', (req, res) => {
